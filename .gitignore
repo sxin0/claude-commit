@@ -1,0 +1,7 @@
+out/
+.idea/
+claude-commit-plugin.jar
+AGENTS.md
+CLAUDE.md
+.gitnexus
+.claude/
