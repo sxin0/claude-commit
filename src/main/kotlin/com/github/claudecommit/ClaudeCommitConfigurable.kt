@@ -13,9 +13,9 @@ import com.intellij.ui.dsl.builder.panel
 import com.intellij.ui.dsl.builder.rows
 
 /**
- * Settings page under Settings > Tools > Claude Commit.
+ * Settings page under Settings > Tools > Claude Code Commit.
  */
-class ClaudeCommitConfigurable : BoundConfigurable("Claude Commit") {
+class ClaudeCommitConfigurable : BoundConfigurable("Claude Code Commit") {
 
     private val state get() = ClaudeCommitSettings.getInstance().state
 

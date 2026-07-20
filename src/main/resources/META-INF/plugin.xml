@@ -1,6 +1,6 @@
 <idea-plugin>
   <id>com.github.claudecommit</id>
-  <name>Claude Commit</name>
+  <name>Claude Code Commit</name>
   <version>1.0.0</version>
   <vendor url="https://github.com/sxin0">sxin0</vendor>
   <description><![CDATA[
@@ -8,7 +8,7 @@
     panel toolbar that sends the list of files checked for the commit to Claude,
     which inspects the diffs itself via read-only git commands and fills the
     generated message into the commit message field.<br>
-    Configurable under <b>Settings &gt; Tools &gt; Claude Commit</b>:
+    Configurable under <b>Settings &gt; Tools &gt; Claude Code Commit</b>:
     Claude CLI path, timeout, and a customizable prompt appended to the built-in one.
   ]]></description>
   <change-notes><![CDATA[
@@ -23,9 +23,9 @@
   <extensions defaultExtensionNs="com.intellij">
     <applicationConfigurable parentId="tools"
                              id="com.github.claudecommit.settings"
-                             displayName="Claude Commit"
+                             displayName="Claude Code Commit"
                              instance="com.github.claudecommit.ClaudeCommitConfigurable"/>
-    <notificationGroup id="Claude Commit" displayType="BALLOON"/>
+    <notificationGroup id="Claude Code Commit" displayType="BALLOON"/>
   </extensions>
 
   <actions>

@@ -16,6 +16,8 @@ import com.intellij.util.xmlb.XmlSerializerUtil
  * the plain-text settings XML on purpose.
  */
 object ClaudeCommitSecrets {
+    // Historical service name from before the plugin was renamed to "Claude Code Commit" —
+    // changing it would orphan keys users already saved in the keychain.
     private val attributes = CredentialAttributes(generateServiceName("Claude Commit", "api-key"))
 
     var apiKey: String?
