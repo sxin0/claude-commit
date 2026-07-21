@@ -80,10 +80,8 @@ object ClaudeCommitGenerator {
             if (settings.baseUrl.isNotBlank()) {
                 overrides["ANTHROPIC_BASE_URL"] = settings.baseUrl.trim()
             }
-            // Read from the keychain here (background thread), not on the EDT.
-            val apiKey = ClaudeCommitSecrets.apiKey
-            if (!apiKey.isNullOrBlank()) {
-                overrides["ANTHROPIC_AUTH_TOKEN"] = apiKey
+            if (settings.apiKey.isNotBlank()) {
+                overrides["ANTHROPIC_AUTH_TOKEN"] = settings.apiKey.trim()
             }
             if (overrides.isNotEmpty()) {
                 cmd.addParameters("--settings", Gson().toJson(mapOf("env" to overrides)))

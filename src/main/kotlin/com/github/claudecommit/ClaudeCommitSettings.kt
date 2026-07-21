@@ -1,32 +1,11 @@
 package com.github.claudecommit
 
-import com.intellij.credentialStore.CredentialAttributes
-import com.intellij.credentialStore.Credentials
-import com.intellij.credentialStore.generateServiceName
-import com.intellij.ide.passwordSafe.PasswordSafe
 import com.intellij.openapi.components.PersistentStateComponent
 import com.intellij.openapi.components.Service
 import com.intellij.openapi.components.State
 import com.intellij.openapi.components.Storage
 import com.intellij.openapi.components.service
 import com.intellij.util.xmlb.XmlSerializerUtil
-
-/**
- * API key storage backed by the IDE's PasswordSafe (system keychain) — kept out of
- * the plain-text settings XML on purpose.
- */
-object ClaudeCommitSecrets {
-    // Historical service name from before the plugin was renamed to "Claude Code Commit" —
-    // changing it would orphan keys users already saved in the keychain.
-    private val attributes = CredentialAttributes(generateServiceName("Claude Commit", "api-key"))
-
-    var apiKey: String?
-        get() = PasswordSafe.instance.getPassword(attributes)
-        set(value) {
-            val credentials = value?.takeIf { it.isNotBlank() }?.let { Credentials("", it) }
-            PasswordSafe.instance.set(attributes, credentials)
-        }
-}
 
 @Service(Service.Level.APP)
 @State(name = "ClaudeCommitSettings", storages = [Storage("claude-commit.xml")])
@@ -41,6 +20,9 @@ class ClaudeCommitSettings : PersistentStateComponent<ClaudeCommitSettings.State
          * Empty = use the CLI's own default (official login).
          */
         var baseUrl: String = ""
+
+        /** API key saved in the plugin settings XML. Empty = use the CLI's own credentials. */
+        var apiKey: String = ""
 
         /** Model name, passed to the CLI as `--model`. Empty = CLI default. */
         var model: String = ""

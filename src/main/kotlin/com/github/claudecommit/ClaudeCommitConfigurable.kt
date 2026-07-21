@@ -4,8 +4,6 @@ import com.intellij.openapi.options.BoundConfigurable
 import com.intellij.openapi.ui.DialogPanel
 import com.intellij.ui.components.JBPasswordField
 import com.intellij.ui.dsl.builder.AlignX
-import com.intellij.ui.dsl.builder.MutableProperty
-import com.intellij.ui.dsl.builder.bind
 import com.intellij.ui.dsl.builder.bindIntText
 import com.intellij.ui.dsl.builder.bindText
 import com.intellij.ui.dsl.builder.columns
@@ -18,12 +16,6 @@ import com.intellij.ui.dsl.builder.rows
 class ClaudeCommitConfigurable : BoundConfigurable("Claude Code Commit") {
 
     private val state get() = ClaudeCommitSettings.getInstance().state
-
-    /**
-     * PasswordSafe is read once per panel lifetime and cached: the binding getter runs
-     * on the EDT for every isModified check, and a keychain hit there can stall the UI.
-     */
-    private var apiKeyCache: String? = null
 
     override fun createPanel(): DialogPanel = panel {
         row("Claude 命令:") {
@@ -43,15 +35,8 @@ class ClaudeCommitConfigurable : BoundConfigurable("Claude Code Commit") {
         row("API Key:") {
             cell(JBPasswordField())
                 .columns(30)
-                .bind(
-                    { field -> String(field.password) },
-                    { field, value -> field.text = value },
-                    MutableProperty(
-                        { apiKeyCache ?: (ClaudeCommitSecrets.apiKey ?: "").also { apiKeyCache = it } },
-                        { apiKeyCache = it; ClaudeCommitSecrets.apiKey = it },
-                    ),
-                )
-                .comment("留空使用 claude CLI 已登录的凭据。保存在系统钥匙串,不写入配置文件")
+                .bindText(state::apiKey)
+                .comment("留空使用 claude CLI 已登录的凭据。保存到插件配置文件 claude-commit.xml")
         }
 
         row("模型:") {
