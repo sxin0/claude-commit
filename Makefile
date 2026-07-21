@@ -41,16 +41,16 @@ check:
 build: check
 	@rm -rf $(OUT) && mkdir -p $(OUT)
 	@echo "Using IDE: $(IDE_HOME)"
-	@CP=$$(find "$(IDE_HOME)/lib" "$(IDE_HOME)/lib/modules" -maxdepth 1 -name '*.jar' 2>/dev/null | tr '\n' ':'); \
+	@CP=$$(find "$(IDE_HOME)/lib" "$(IDE_HOME)/lib/modules" "$(IDE_HOME)/plugins/terminal/lib" "$(IDE_HOME)/plugins/terminal/lib/modules" -maxdepth 1 -name '*.jar' 2>/dev/null | tr '\n' ':'); \
 	 JH="$${JAVA_HOME:-$(IDE_HOME)/jbr/Contents/Home}"; \
 	 JAVA_HOME="$$JH" "$(KOTLINC)" $(SRC) -classpath "$$CP" -d $(OUT) -jvm-target $(JVM_TARGET)
 
-# Package the plugin jar (compiled classes + plugin.xml).
+# Package the plugin jar (compiled classes + plugin.xml + icons).
 # Same JAVA_HOME fallback as `build`: works without a system JDK on the PATH.
 jar: build
-	@cp -r src/main/resources/META-INF $(OUT)/
+	@cp -r src/main/resources/META-INF src/main/resources/icons $(OUT)/
 	@JH="$${JAVA_HOME:-$(IDE_HOME)/jbr/Contents/Home}"; \
-	 cd $(OUT) && "$$JH/bin/jar" cf ../$(PLUGIN_JAR) META-INF/ com/
+	 cd $(OUT) && "$$JH/bin/jar" cf ../$(PLUGIN_JAR) META-INF/ icons/ com/
 	@rm -rf $(OUT)
 	@echo "Built $(PLUGIN_JAR)"
 

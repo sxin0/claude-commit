@@ -1,7 +1,7 @@
 <idea-plugin>
   <id>com.github.claudecommit</id>
   <name>Claude Code Commit</name>
-  <version>1.0.1</version>
+  <version>1.1.0</version>
   <vendor url="https://github.com/sxin0">sxin0</vendor>
   <description><![CDATA[
     Generates Git commit messages with the Claude CLI. Adds a button to the commit
@@ -12,6 +12,10 @@
     Claude CLI path, timeout, and a customizable prompt appended to the built-in one.
   ]]></description>
   <change-notes><![CDATA[
+    <b>1.1.0</b> — Editor popup menu actions "复制 CC 引用" (copies a Claude Code
+    reference, @path#Lstart-end, for the current file and selection) and
+    "发送 CC 引用" (types the reference into the active terminal tab).
+
     <b>1.0.1</b> — Save API Key in plugin settings.
 
     <b>1.0.0</b> — Initial release: commit-panel button, Claude CLI integration,
@@ -21,6 +25,9 @@
   <idea-version since-build="242"/>
   <depends>com.intellij.modules.platform</depends>
   <depends>com.intellij.modules.vcs</depends>
+  <!-- Optional: "发送 CC 引用" needs the Terminal plugin (bundled, but users can disable
+       it). Everything else must keep working without it. -->
+  <depends optional="true" config-file="claude-commit-terminal.xml">org.jetbrains.plugins.terminal</depends>
 
   <extensions defaultExtensionNs="com.intellij">
     <applicationConfigurable parentId="tools"
@@ -38,5 +45,17 @@
             icon="AllIcons.Actions.Lightning">
       <add-to-group group-id="Vcs.MessageActionGroup"/>
     </action>
+    <!-- CC 引用 actions sit at the top of the editor popup, set off by a trailing
+         separator. "发送 CC 引用" joins this group from claude-commit-terminal.xml
+         when the Terminal plugin is enabled. -->
+    <group id="ClaudeCommit.CcReferenceGroup">
+      <add-to-group group-id="EditorPopupMenu" anchor="first"/>
+      <action id="ClaudeCommit.CopyCcReference"
+              class="com.github.claudecommit.CopyCcReferenceAction"
+              text="复制 CC 引用"
+              description="Copy a Claude Code reference (@path#Lstart-end) for the current file and selection"
+              icon="/icons/claude.svg"/>
+      <separator/>
+    </group>
   </actions>
 </idea-plugin>
