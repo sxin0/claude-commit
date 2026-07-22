@@ -49,6 +49,15 @@ class ClaudeCommitSettings : PersistentStateComponent<ClaudeCommitSettings.State
          * does not reappear. Off by default — leaves the IDE's own behavior.
          */
         var closeTerminalOnStartup: Boolean = false
+
+        /**
+         * When true, "Send CC Reference" opens a fresh terminal and launches the
+         * Claude CLI ([claudePath]) if the Terminal tool window has no tab, then
+         * types the reference into it — instead of warning that no terminal is open.
+         * On by default. When off, the old "no terminal" warning is shown instead.
+         * Only the no-tab case is affected; an existing terminal keeps its behavior.
+         */
+        var autoStartClaudeWhenNoTerminal: Boolean = true
     }
 
     private var state = State()

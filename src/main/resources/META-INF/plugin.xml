@@ -4,12 +4,62 @@
   <version>1.2.0</version>
   <vendor url="https://github.com/sxin0">sxin0</vendor>
   <description><![CDATA[
-    Generates Git commit messages with the Claude CLI. Adds a button to the commit
-    panel toolbar that sends the list of files checked for the commit to Claude,
-    which inspects the diffs itself via read-only git commands and fills the
-    generated message into the commit message field.<br>
-    Configurable under <b>Settings &gt; Tools &gt; Claude Code Commit</b>:
-    Claude CLI path, timeout, and a customizable prompt appended to the built-in one.
+    <b>Claude Code Commit</b> brings the Claude CLI into your JetBrains IDE — both for
+    generating commit messages and for feeding file references straight into a Claude
+    Code session running in the terminal.<br>
+    <br>
+    <b>Features</b>
+    <ul>
+      <li><b>Generate commit messages</b> — a button on the commit panel toolbar sends
+      the files checked for the commit to Claude, which inspects the diffs itself via
+      read-only git commands and fills the generated message into the commit message
+      field. The output language can follow the IDE or be pinned to Chinese/English, and
+      your own prompt is appended to the built-in commit conventions.</li>
+      <li><b>Copy / Send CC reference</b> — right-click in the editor or the project view
+      (or press Ctrl+Alt+K, Cmd+Alt+K on macOS) to build a Claude Code reference for the
+      current file and selection (<code>@path#Lstart-end</code>) and either copy it to the
+      clipboard or type it into the terminal.<br>
+      <b>Send</b> types the reference into <b>only the currently active terminal tab</b>.
+      This deliberately differs from the official <i>Claude Code [Beta]</i> plugin, whose
+      shortcut broadcasts the reference to every open Claude session at once — so you can
+      keep several Claude sessions side by side and reference a file into exactly the one
+      you mean.</li>
+      <li><b>Auto-open Claude Code</b> — when you send a reference and no terminal is open,
+      a new terminal is created, the Claude CLI is launched in it, and the reference is
+      typed in automatically (on by default; can be turned off).</li>
+      <li><b>Bilingual UI</b> — the interface and settings follow the IDE display language
+      (English or Simplified Chinese).</li>
+      <li><b>Close terminal on project open</b> — an optional convenience that hides a
+      terminal restored from the previous session, whose shell is already gone.</li>
+    </ul>
+    Configurable under <b>Settings &gt; Tools &gt; Claude Code Commit</b> (Claude CLI path,
+    API URL/key, model, timeout, custom prompt, and the terminal options above). The CC
+    reference and auto-open features require the bundled Terminal plugin. Requires IDE
+    2025.3.6 or newer.
+    <hr>
+    <b>Claude Code Commit</b> 把 Claude CLI 集成进你的 JetBrains IDE——既能生成 Git 提交消息,
+    也能把文件引用直接送进终端里运行的 Claude Code 会话。<br>
+    <br>
+    <b>功能</b>
+    <ul>
+      <li><b>生成提交消息</b>——提交面板工具栏上的一个按钮,把本次勾选提交的文件交给 Claude,
+      它自己用只读的 git 命令查看差异,并把生成的消息填回提交消息框。输出语言可跟随 IDE,也可固定
+      为中文/英文;你的自定义提示词会追加在内置的提交约定之后。</li>
+      <li><b>复制 / 发送 CC 引用</b>——在编辑器或项目视图中右键(或按 Ctrl+Alt+K,macOS 为
+      Cmd+Alt+K),为当前文件与选区生成 Claude Code 引用(<code>@path#Lstart-end</code>),复制到
+      剪贴板或输入到终端。<br>
+      <b>发送</b>只会把引用输入到<b>当前激活的终端标签页</b>。这一点有意区别于官方的
+      <i>Claude Code [Beta]</i> 插件——后者的快捷键会把引用同时广播到所有已打开的 Claude 会话;
+      因此你可以并排开多个 Claude 会话,把文件引用精确发送到你想要的那一个。</li>
+      <li><b>自动打开 Claude Code</b>——发送引用时如果没有打开的终端,会自动新建终端、在其中启动
+      Claude CLI,并把引用输入进去(默认开启,可关闭)。</li>
+      <li><b>中英双语界面</b>——界面与设置跟随 IDE 显示语言(英文或简体中文)。</li>
+      <li><b>打开项目时关闭终端</b>——一个可选的便捷项,隐藏从上次会话恢复、其 shell 已不存在的
+      空终端。</li>
+    </ul>
+    可在 <b>Settings &gt; Tools &gt; Claude Code Commit</b> 中配置(Claude CLI 路径、API 地址/密钥、
+    模型、超时、自定义提示词,以及上述终端选项)。CC 引用与自动打开功能需要启用捆绑的终端插件。
+    需要 IDE 2025.3.6 或更高版本。
   ]]></description>
   <change-notes><![CDATA[
     <b>1.2.0</b> — Optional setting to auto-close the Terminal tool window when a
