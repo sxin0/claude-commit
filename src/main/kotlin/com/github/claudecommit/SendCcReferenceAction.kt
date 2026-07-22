@@ -75,11 +75,14 @@ class SendCcReferenceAction : AnAction(), DumbAware {
     }
 
     private fun notifyNoTerminal(project: Project) = notify(
-        project, "没有可用的终端", "请先打开终端窗口(并启动会话)，再发送 CC 引用。", NotificationType.WARNING
+        project,
+        ClaudeCommitBundle.message("notify.noTerminal.title"),
+        ClaudeCommitBundle.message("notify.noTerminal.content"),
+        NotificationType.WARNING
     )
 
     private fun notifyError(project: Project, reason: String) = notify(
-        project, "发送 CC 引用失败", reason, NotificationType.ERROR
+        project, ClaudeCommitBundle.message("notify.send.failed.title"), reason, NotificationType.ERROR
     )
 
     private fun notify(project: Project, title: String, content: String, type: NotificationType) {

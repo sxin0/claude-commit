@@ -46,11 +46,11 @@ class ClaudeCommitAction : AnAction(), DumbAware {
         }
         if (running.containsKey(project)) {
             e.presentation.icon = AllIcons.Actions.Suspend
-            e.presentation.text = "停止生成"
+            e.presentation.text = ClaudeCommitBundle.message("action.generate.stop")
             e.presentation.isEnabled = true
         } else {
             e.presentation.icon = AllIcons.Actions.Lightning
-            e.presentation.text = "使用 Claude 生成提交消息"
+            e.presentation.text = ClaudeCommitBundle.message("action.ClaudeCommit.Generate.text")
             e.presentation.isEnabled = includedFilePaths(e).isNotEmpty()
         }
     }
@@ -65,7 +65,7 @@ class ClaudeCommitAction : AnAction(), DumbAware {
         val commitMessage = e.getData(VcsDataKeys.COMMIT_MESSAGE_CONTROL) ?: return
         val files = includedFilePaths(e)
 
-        object : Task.Backgroundable(project, "使用 Claude 生成提交消息", true) {
+        object : Task.Backgroundable(project, ClaudeCommitBundle.message("action.ClaudeCommit.Generate.text"), true) {
             override fun run(indicator: ProgressIndicator) {
                 running[project] = indicator
                 ActivityTracker.getInstance().inc() // repaint the toolbar → stop icon
@@ -105,7 +105,7 @@ class ClaudeCommitAction : AnAction(), DumbAware {
     private fun notifyError(project: Project, reason: String) {
         NotificationGroupManager.getInstance()
             .getNotificationGroup(NOTIFICATION_GROUP_ID)
-            .createNotification("生成提交消息失败", reason, NotificationType.ERROR)
+            .createNotification(ClaudeCommitBundle.message("notify.generate.failed.title"), reason, NotificationType.ERROR)
             .notify(project)
     }
 }

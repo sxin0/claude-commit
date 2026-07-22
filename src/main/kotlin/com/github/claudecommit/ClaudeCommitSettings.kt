@@ -7,6 +7,9 @@ import com.intellij.openapi.components.Storage
 import com.intellij.openapi.components.service
 import com.intellij.util.xmlb.XmlSerializerUtil
 
+/** Language of the generated commit message. AUTO follows the IDE display language. */
+enum class CommitLanguage { AUTO, CHINESE, ENGLISH }
+
 @Service(Service.Level.APP)
 @State(name = "ClaudeCommitSettings", storages = [Storage("claude-commit.xml")])
 class ClaudeCommitSettings : PersistentStateComponent<ClaudeCommitSettings.State> {
@@ -27,9 +30,13 @@ class ClaudeCommitSettings : PersistentStateComponent<ClaudeCommitSettings.State
         /** Model name, passed to the CLI as `--model`. Empty = CLI default. */
         var model: String = ""
 
+        /** Language the generated commit message is written in. AUTO = follow the IDE language. */
+        var commitLanguage: CommitLanguage = CommitLanguage.AUTO
+
         /**
          * Part 2 of the prompt: user-customizable content appended after the
-         * built-in task/format prompt.
+         * built-in task/format prompt. The output language is controlled separately
+         * by [commitLanguage], not here.
          */
         var userPrompt: String = DEFAULT_USER_PROMPT
 
@@ -46,8 +53,9 @@ class ClaudeCommitSettings : PersistentStateComponent<ClaudeCommitSettings.State
     }
 
     companion object {
+        // Language is set separately via CommitLanguage, so this default covers style only.
         val DEFAULT_USER_PROMPT = """
-            请用中文回答。回答时请遵循以下原则：
+            生成提交消息时请遵循以下风格：
             - 简洁明了，避免冗长描述
             - 只提供必要信息，省略无关细节
             - 直击要点，不重复啰嗦

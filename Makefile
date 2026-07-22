@@ -45,12 +45,12 @@ build: check
 	 JH="$${JAVA_HOME:-$(IDE_HOME)/jbr/Contents/Home}"; \
 	 JAVA_HOME="$$JH" "$(KOTLINC)" $(SRC) -classpath "$$CP" -d $(OUT) -jvm-target $(JVM_TARGET)
 
-# Package the plugin jar (compiled classes + plugin.xml + icons).
+# Package the plugin jar (compiled classes + plugin.xml + icons + i18n bundles).
 # Same JAVA_HOME fallback as `build`: works without a system JDK on the PATH.
 jar: build
-	@cp -r src/main/resources/META-INF src/main/resources/icons $(OUT)/
+	@cp -r src/main/resources/META-INF src/main/resources/icons src/main/resources/messages $(OUT)/
 	@JH="$${JAVA_HOME:-$(IDE_HOME)/jbr/Contents/Home}"; \
-	 cd $(OUT) && "$$JH/bin/jar" cf ../$(PLUGIN_JAR) META-INF/ icons/ com/
+	 cd $(OUT) && "$$JH/bin/jar" cf ../$(PLUGIN_JAR) META-INF/ icons/ messages/ com/
 	@rm -rf $(OUT)
 	@echo "Built $(PLUGIN_JAR)"
 

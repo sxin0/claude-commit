@@ -53,14 +53,18 @@ object ClaudeCommitGenerator {
     """.trimIndent()
 
     fun generate(project: Project, filePaths: List<String>, indicator: ProgressIndicator): GenerationResult {
-        val basePath = project.basePath ?: return GenerationResult.Failure("无法确定项目根目录")
+        val basePath = project.basePath ?: return GenerationResult.Failure(ClaudeCommitBundle.message("error.noBasePath"))
         if (filePaths.isEmpty()) {
-            return GenerationResult.Failure("没有勾选任何已加入 Git 的文件")
+            return GenerationResult.Failure(ClaudeCommitBundle.message("error.noFiles"))
         }
 
-        indicator.text = "正在调用 Claude 生成提交消息…"
+        indicator.text = ClaudeCommitBundle.message("progress.generating")
         val settings = ClaudeCommitSettings.getInstance().state
-        val prompt = buildPrompt(settings.userPrompt, filePaths.map { relativize(basePath, it) })
+        val prompt = buildPrompt(
+            languageDirective(settings.commitLanguage),
+            settings.userPrompt,
+            filePaths.map { relativize(basePath, it) },
+        )
 
         val output = try {
             val cmd = GeneralCommandLine(settings.claudePath, "-p", prompt, "--allowedTools", ALLOWED_TOOLS)
@@ -90,21 +94,43 @@ object ClaudeCommitGenerator {
             handler.processInput.close()
             handler.runProcessWithProgressIndicator(indicator, settings.timeoutSeconds * 1000, true)
         } catch (e: Exception) {
-            return GenerationResult.Failure("无法启动 claude 命令(${settings.claudePath}): ${e.message}")
+            return GenerationResult.Failure(
+                ClaudeCommitBundle.message("error.launchFailed", settings.claudePath, e.message ?: "")
+            )
         }
 
         return when {
             output.isCancelled -> GenerationResult.Cancelled
-            output.isTimeout -> GenerationResult.Failure("Claude 调用超时(${settings.timeoutSeconds} 秒),可在设置中调整")
+            output.isTimeout -> GenerationResult.Failure(
+                ClaudeCommitBundle.message("error.timeout", settings.timeoutSeconds)
+            )
             output.exitCode != 0 -> GenerationResult.Failure(
-                "claude 退出码 ${output.exitCode}: ${output.stderr.take(300).ifBlank { output.stdout.take(300) }}"
+                ClaudeCommitBundle.message(
+                    "error.exitCode",
+                    output.exitCode,
+                    output.stderr.take(300).ifBlank { output.stdout.take(300) },
+                )
             )
             else -> extractMessage(output.stdout)
         }
     }
 
-    private fun buildPrompt(userPrompt: String, files: List<String>): String = buildString {
+    /**
+     * The line appended to the prompt that fixes the commit message's output language.
+     * AUTO resolves to the language the user is reading the IDE in.
+     */
+    private fun languageDirective(language: CommitLanguage): String = when (language) {
+        CommitLanguage.CHINESE -> "请用中文书写本次提交消息。"
+        CommitLanguage.ENGLISH -> "Write the commit message in English."
+        CommitLanguage.AUTO ->
+            if (ClaudeCommitBundle.isChineseUi()) "请用中文书写本次提交消息。"
+            else "Write the commit message in English."
+    }
+
+    private fun buildPrompt(languageDirective: String, userPrompt: String, files: List<String>): String = buildString {
         append(BASE_PROMPT)
+        append("\n\n")
+        append(languageDirective)
         if (userPrompt.isNotBlank()) {
             append("\n\n")
             append(userPrompt.trim())
@@ -120,11 +146,11 @@ object ClaudeCommitGenerator {
     private fun extractMessage(stdout: String): GenerationResult {
         val match = COMMIT_MESSAGE_REGEX.find(stdout)
             ?: return GenerationResult.Failure(
-                "Claude 输出中未找到 <commit-message> 标签。原始输出开头: ${stdout.trim().take(200)}"
+                ClaudeCommitBundle.message("error.noTag", stdout.trim().take(200))
             )
         val message = match.groupValues[1].trim()
         return if (message.isEmpty()) {
-            GenerationResult.Failure("Claude 返回了空的提交消息")
+            GenerationResult.Failure(ClaudeCommitBundle.message("error.emptyMessage"))
         } else {
             GenerationResult.Success(message)
         }

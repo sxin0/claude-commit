@@ -1,11 +1,16 @@
 <!-- Loaded only when the (optional) org.jetbrains.plugins.terminal dependency is
      enabled — see the <depends optional="true"> entry in plugin.xml. -->
 <idea-plugin>
+  <!-- Do NOT remove: a config-file sub-descriptor does not inherit the main
+       descriptor's <resource-bundle>, so this action's text/description
+       (action.ClaudeCommit.SendCcReference.*) only localize when the bundle is
+       declared here too. Redeclaring the SAME bundle name is the platform's own
+       convention (cf. the Kotlin plugin) and raises no "redefinition" warning —
+       that warning only fires on a *conflicting* bundle value. -->
+  <resource-bundle>messages.ClaudeCommitBundle</resource-bundle>
   <actions>
     <action id="ClaudeCommit.SendCcReference"
             class="com.github.claudecommit.SendCcReferenceAction"
-            text="发送 CC 引用"
-            description="Type a Claude Code reference (@path#Lstart-end) into the active terminal tab"
             icon="/icons/claude.svg">
       <add-to-group group-id="ClaudeCommit.CcReferenceGroup" anchor="after"
                     relative-to-action="ClaudeCommit.CopyCcReference"/>

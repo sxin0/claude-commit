@@ -21,8 +21,14 @@
     <b>1.0.0</b> — Initial release: commit-panel button, Claude CLI integration,
     tag-based message extraction, customizable prompt.
   ]]></change-notes>
-  <!-- jvm-target 21 requires the JBR 21 runtime shipped since 2024.2; tested on 2026.2. -->
-  <idea-version since-build="242"/>
+  <!-- Requires 2025.3.6 (build 253.33813.25) or newer: ReworkedTerminalSender links
+       against the reworked-terminal frontend API (com.intellij.terminal.frontend.toolwindow
+       / .view), which is absent on 2025.2 and earlier and fails the binary-compat check.
+       jvm-target 21 also requires the JBR 21 runtime. -->
+  <idea-version since-build="253.33813.25"/>
+  <!-- Action text/description and all UI strings resolve against this bundle;
+       English is the fallback, Chinese (_zh) is used when the IDE runs in Chinese. -->
+  <resource-bundle>messages.ClaudeCommitBundle</resource-bundle>
   <depends>com.intellij.modules.platform</depends>
   <depends>com.intellij.modules.vcs</depends>
   <!-- Optional: "发送 CC 引用" needs the Terminal plugin (bundled, but users can disable
@@ -38,10 +44,9 @@
   </extensions>
 
   <actions>
+    <!-- text/description come from the resource bundle (action.<id>.text / .description). -->
     <action id="ClaudeCommit.Generate"
             class="com.github.claudecommit.ClaudeCommitAction"
-            text="使用 Claude 生成提交消息"
-            description="Generate a commit message from the current changes using the Claude CLI"
             icon="AllIcons.Actions.Lightning">
       <add-to-group group-id="Vcs.MessageActionGroup"/>
     </action>
@@ -52,8 +57,6 @@
       <add-to-group group-id="EditorPopupMenu" anchor="first"/>
       <action id="ClaudeCommit.CopyCcReference"
               class="com.github.claudecommit.CopyCcReferenceAction"
-              text="复制 CC 引用"
-              description="Copy a Claude Code reference (@path#Lstart-end) for the current file and selection"
               icon="/icons/claude.svg"/>
       <separator/>
     </group>
