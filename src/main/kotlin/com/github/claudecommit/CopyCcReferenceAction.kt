@@ -3,7 +3,6 @@ package com.github.claudecommit
 import com.intellij.openapi.actionSystem.ActionUpdateThread
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
-import com.intellij.openapi.actionSystem.CommonDataKeys
 import com.intellij.openapi.ide.CopyPasteManager
 import com.intellij.openapi.project.DumbAware
 import java.awt.datatransfer.StringSelection
@@ -17,8 +16,7 @@ class CopyCcReferenceAction : AnAction(), DumbAware {
     override fun getActionUpdateThread(): ActionUpdateThread = ActionUpdateThread.BGT
 
     override fun update(e: AnActionEvent) {
-        e.presentation.isEnabledAndVisible =
-            e.getData(CommonDataKeys.EDITOR) != null && e.getData(CommonDataKeys.VIRTUAL_FILE) != null
+        e.presentation.isEnabledAndVisible = CcReference.isAvailable(e)
     }
 
     override fun actionPerformed(e: AnActionEvent) {

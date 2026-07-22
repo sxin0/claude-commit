@@ -50,11 +50,15 @@
             icon="AllIcons.Actions.Lightning">
       <add-to-group group-id="Vcs.MessageActionGroup"/>
     </action>
-    <!-- CC 引用 actions sit at the top of the editor popup, set off by a trailing
-         separator. "发送 CC 引用" joins this group from claude-commit-terminal.xml
-         when the Terminal plugin is enabled. -->
+    <!-- CC 引用 actions sit at the top of the editor popup, and at the bottom of the
+         project view popup. The leading separator divides them from the items above
+         in the project view; in the editor popup it sits at the very top and the
+         platform trims it. The trailing separator does the reverse. "发送 CC 引用"
+         joins this group from claude-commit-terminal.xml when the Terminal plugin is enabled. -->
     <group id="ClaudeCommit.CcReferenceGroup">
       <add-to-group group-id="EditorPopupMenu" anchor="first"/>
+      <add-to-group group-id="ProjectViewPopupMenu" anchor="last"/>
+      <separator/>
       <action id="ClaudeCommit.CopyCcReference"
               class="com.github.claudecommit.CopyCcReferenceAction"
               icon="/icons/claude.svg"/>
