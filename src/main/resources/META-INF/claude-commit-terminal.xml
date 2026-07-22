@@ -8,6 +8,12 @@
        convention (cf. the Kotlin plugin) and raises no "redefinition" warning —
        that warning only fires on a *conflicting* bundle value. -->
   <resource-bundle>messages.ClaudeCommitBundle</resource-bundle>
+  <extensions defaultExtensionNs="com.intellij">
+    <!-- Hides the Terminal tool window on project open when the user opts in.
+         Registered here (not in the main descriptor) so it loads only with the
+         Terminal plugin — see CloseTerminalOnStartupActivity. -->
+    <postStartupActivity implementation="com.github.claudecommit.CloseTerminalOnStartupActivity"/>
+  </extensions>
   <actions>
     <action id="ClaudeCommit.SendCcReference"
             class="com.github.claudecommit.SendCcReferenceAction"

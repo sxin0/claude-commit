@@ -6,6 +6,7 @@ import com.intellij.ui.components.JBPasswordField
 import com.intellij.ui.dsl.builder.AlignX
 import com.intellij.ui.dsl.builder.bindIntText
 import com.intellij.ui.dsl.builder.bindItem
+import com.intellij.ui.dsl.builder.bindSelected
 import com.intellij.ui.dsl.builder.bindText
 import com.intellij.ui.dsl.builder.columns
 import com.intellij.ui.dsl.builder.panel
@@ -72,6 +73,17 @@ class ClaudeCommitConfigurable : BoundConfigurable("Claude Code Commit") {
                 .rows(8)
                 .align(AlignX.FILL)
                 .comment(ClaudeCommitBundle.message("settings.userPrompt.comment"))
+        }
+
+        // Independent convenience option, unrelated to commit-message generation.
+        // Kept in its own titled group (whose title says so) so users don't mistake
+        // it for a Claude/commit setting.
+        group(ClaudeCommitBundle.message("settings.terminal.group")) {
+            row {
+                checkBox(ClaudeCommitBundle.message("settings.closeTerminalOnStartup.label"))
+                    .bindSelected(state::closeTerminalOnStartup)
+                    .comment(ClaudeCommitBundle.message("settings.closeTerminalOnStartup.comment"))
+            }
         }
     }
 

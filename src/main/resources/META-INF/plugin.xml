@@ -1,7 +1,7 @@
 <idea-plugin>
   <id>com.github.claudecommit</id>
   <name>Claude Code Commit</name>
-  <version>1.1.0</version>
+  <version>1.2.0</version>
   <vendor url="https://github.com/sxin0">sxin0</vendor>
   <description><![CDATA[
     Generates Git commit messages with the Claude CLI. Adds a button to the commit
@@ -12,6 +12,10 @@
     Claude CLI path, timeout, and a customizable prompt appended to the built-in one.
   ]]></description>
   <change-notes><![CDATA[
+    <b>1.2.0</b> — Optional setting to auto-close the Terminal tool window when a
+    project opens (independent of commit-message generation; requires the Terminal
+    plugin). Kept in its own group on the settings page.
+
     <b>1.1.0</b> — Editor popup menu actions "复制 CC 引用" (copies a Claude Code
     reference, @path#Lstart-end, for the current file and selection) and
     "发送 CC 引用" (types the reference into the active terminal tab).

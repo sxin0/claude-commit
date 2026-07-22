@@ -42,6 +42,13 @@ class ClaudeCommitSettings : PersistentStateComponent<ClaudeCommitSettings.State
 
         /** Timeout for one Claude invocation, in seconds. */
         var timeoutSeconds: Int = 120
+
+        /**
+         * When true, the Terminal tool window is hidden on project open so a
+         * session restored from the previous run (its contents already gone)
+         * does not reappear. Off by default — leaves the IDE's own behavior.
+         */
+        var closeTerminalOnStartup: Boolean = false
     }
 
     private var state = State()
