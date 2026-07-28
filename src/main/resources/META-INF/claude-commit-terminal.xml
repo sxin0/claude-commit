@@ -13,6 +13,10 @@
          Registered here (not in the main descriptor) so it loads only with the
          Terminal plugin — see CloseTerminalOnStartupActivity. -->
     <postStartupActivity implementation="com.github.claudecommit.CloseTerminalOnStartupActivity"/>
+    <!-- Cmd/Alt+N is also the IDE's "Activate <X> Tool Window" shortcut. Both actions
+         end up enabled for the same keystroke, and a promoter is the platform's way
+         of deciding the winner — see SwitchTerminalTabActionPromoter. -->
+    <actionPromoter implementation="com.github.claudecommit.SwitchTerminalTabActionPromoter"/>
   </extensions>
   <actions>
     <action id="ClaudeCommit.SendCcReference"
@@ -26,6 +30,47 @@
            binds meta alt K. -->
       <keyboard-shortcut keymap="$default" first-keystroke="ctrl alt K"/>
       <keyboard-shortcut keymap="Mac OS X 10.5+" first-keystroke="meta alt K" replace-all="true"/>
+    </action>
+    <!-- Switch to the N-th terminal tab, but only while the terminal has the focus;
+         everywhere else these keystrokes keep opening the numbered tool windows.
+         One action per digit because the platform instantiates a registered action
+         through a no-argument constructor. replace-all on the Mac keymap drops the inherited
+         alt N (which types special characters on macOS) so only meta N is bound. -->
+    <action id="ClaudeCommit.SwitchTerminalTab1" class="com.github.claudecommit.SwitchTerminalTab1">
+      <keyboard-shortcut keymap="$default" first-keystroke="alt 1"/>
+      <keyboard-shortcut keymap="Mac OS X 10.5+" first-keystroke="meta 1" replace-all="true"/>
+    </action>
+    <action id="ClaudeCommit.SwitchTerminalTab2" class="com.github.claudecommit.SwitchTerminalTab2">
+      <keyboard-shortcut keymap="$default" first-keystroke="alt 2"/>
+      <keyboard-shortcut keymap="Mac OS X 10.5+" first-keystroke="meta 2" replace-all="true"/>
+    </action>
+    <action id="ClaudeCommit.SwitchTerminalTab3" class="com.github.claudecommit.SwitchTerminalTab3">
+      <keyboard-shortcut keymap="$default" first-keystroke="alt 3"/>
+      <keyboard-shortcut keymap="Mac OS X 10.5+" first-keystroke="meta 3" replace-all="true"/>
+    </action>
+    <action id="ClaudeCommit.SwitchTerminalTab4" class="com.github.claudecommit.SwitchTerminalTab4">
+      <keyboard-shortcut keymap="$default" first-keystroke="alt 4"/>
+      <keyboard-shortcut keymap="Mac OS X 10.5+" first-keystroke="meta 4" replace-all="true"/>
+    </action>
+    <action id="ClaudeCommit.SwitchTerminalTab5" class="com.github.claudecommit.SwitchTerminalTab5">
+      <keyboard-shortcut keymap="$default" first-keystroke="alt 5"/>
+      <keyboard-shortcut keymap="Mac OS X 10.5+" first-keystroke="meta 5" replace-all="true"/>
+    </action>
+    <action id="ClaudeCommit.SwitchTerminalTab6" class="com.github.claudecommit.SwitchTerminalTab6">
+      <keyboard-shortcut keymap="$default" first-keystroke="alt 6"/>
+      <keyboard-shortcut keymap="Mac OS X 10.5+" first-keystroke="meta 6" replace-all="true"/>
+    </action>
+    <action id="ClaudeCommit.SwitchTerminalTab7" class="com.github.claudecommit.SwitchTerminalTab7">
+      <keyboard-shortcut keymap="$default" first-keystroke="alt 7"/>
+      <keyboard-shortcut keymap="Mac OS X 10.5+" first-keystroke="meta 7" replace-all="true"/>
+    </action>
+    <action id="ClaudeCommit.SwitchTerminalTab8" class="com.github.claudecommit.SwitchTerminalTab8">
+      <keyboard-shortcut keymap="$default" first-keystroke="alt 8"/>
+      <keyboard-shortcut keymap="Mac OS X 10.5+" first-keystroke="meta 8" replace-all="true"/>
+    </action>
+    <action id="ClaudeCommit.SwitchTerminalTab9" class="com.github.claudecommit.SwitchTerminalTab9">
+      <keyboard-shortcut keymap="$default" first-keystroke="alt 9"/>
+      <keyboard-shortcut keymap="Mac OS X 10.5+" first-keystroke="meta 9" replace-all="true"/>
     </action>
   </actions>
 </idea-plugin>

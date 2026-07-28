@@ -1,7 +1,7 @@
 <idea-plugin>
   <id>com.github.claudecommit</id>
   <name>Claude Code Commit</name>
-  <version>1.2.0</version>
+  <version>1.3.0</version>
   <vendor url="https://github.com/sxin0">sxin0</vendor>
   <description><![CDATA[
     <b>Claude Code Commit</b> brings the Claude CLI into your JetBrains IDE — both for
@@ -27,6 +27,11 @@
       <li><b>Auto-open Claude Code</b> — when you send a reference and no terminal is open,
       a new terminal is created, the Claude CLI is launched in it, and the reference is
       typed in automatically (on by default; can be turned off).</li>
+      <li><b>Switch terminal tabs with Cmd+1…9</b> — while the focus is inside the
+      Terminal tool window, Cmd+N (Alt+N on Windows/Linux) selects the N-th terminal
+      tab instead of opening the numbered tool window. Anywhere else, and when there
+      is no N-th tab, the IDE keeps its own behavior (on by default; can be turned
+      off).</li>
       <li><b>Bilingual UI</b> — the interface and settings follow the IDE display language
       (English or Simplified Chinese).</li>
       <li><b>Close terminal on project open</b> — an optional convenience that hides a
@@ -53,6 +58,9 @@
       因此你可以并排开多个 Claude 会话,把文件引用精确发送到你想要的那一个。</li>
       <li><b>自动打开 Claude Code</b>——发送引用时如果没有打开的终端,会自动新建终端、在其中启动
       Claude CLI,并把引用输入进去(默认开启,可关闭)。</li>
+      <li><b>Cmd+1~9 切换终端标签页</b>——焦点在终端工具窗内时,Cmd+N(Windows/Linux 为 Alt+N)
+      切换到第 N 个终端标签页,而不是打开对应编号的工具窗。焦点在别处、或没有第 N 个标签页时,
+      仍保持 IDE 原有行为(默认开启,可关闭)。</li>
       <li><b>中英双语界面</b>——界面与设置跟随 IDE 显示语言(英文或简体中文)。</li>
       <li><b>打开项目时关闭终端</b>——一个可选的便捷项,隐藏从上次会话恢复、其 shell 已不存在的
       空终端。</li>
@@ -62,6 +70,10 @@
     需要 IDE 2025.3.6 或更高版本。
   ]]></description>
   <change-notes><![CDATA[
+    <b>1.3.0</b> — Cmd+1…9 (Alt+1…9 on Windows/Linux) switch to the N-th terminal
+    tab while the Terminal tool window has the focus. Elsewhere, and when the tab
+    does not exist, the IDE's own "Activate &lt;X&gt; Tool Window" still runs.
+
     <b>1.2.0</b> — Optional setting to auto-close the Terminal tool window when a
     project opens (independent of commit-message generation; requires the Terminal
     plugin). Kept in its own group on the settings page.

@@ -89,6 +89,11 @@ class ClaudeCommitConfigurable : BoundConfigurable("Claude Code Commit") {
                     .bindSelected(state::autoStartClaudeWhenNoTerminal)
                     .comment(ClaudeCommitBundle.message("settings.autoStartClaude.comment"))
             }
+            row {
+                checkBox(ClaudeCommitBundle.message("settings.switchTerminalTab.label"))
+                    .bindSelected(state::switchTerminalTabWithNumberKeys)
+                    .comment(ClaudeCommitBundle.message("settings.switchTerminalTab.comment"))
+            }
         }
     }
 

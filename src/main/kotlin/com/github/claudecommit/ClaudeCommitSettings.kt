@@ -58,6 +58,15 @@ class ClaudeCommitSettings : PersistentStateComponent<ClaudeCommitSettings.State
          * Only the no-tab case is affected; an existing terminal keeps its behavior.
          */
         var autoStartClaudeWhenNoTerminal: Boolean = true
+
+        /**
+         * When true, Cmd+1…9 (Alt+1…9 outside macOS) switch to the N-th terminal
+         * tab while the Terminal tool window has the focus, instead of opening the
+         * numbered tool windows. On by default. Everywhere else — and when there is
+         * no N-th tab — the IDE's own behavior is left untouched.
+         * See [SwitchTerminalTabAction].
+         */
+        var switchTerminalTabWithNumberKeys: Boolean = true
     }
 
     private var state = State()
