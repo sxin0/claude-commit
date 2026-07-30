@@ -80,9 +80,9 @@ class ClaudeCommitConfigurable : BoundConfigurable("Claude Code [Kit]") {
         // it for a Claude/commit setting.
         group(ClaudeCommitBundle.message("settings.terminal.group")) {
             row {
-                checkBox(ClaudeCommitBundle.message("settings.closeTerminalOnStartup.label"))
-                    .bindSelected(state::closeTerminalOnStartup)
-                    .comment(ClaudeCommitBundle.message("settings.closeTerminalOnStartup.comment"))
+                checkBox(ClaudeCommitBundle.message("settings.closeTerminalOnProjectClose.label"))
+                    .bindSelected(state::closeTerminalOnProjectClose)
+                    .comment(ClaudeCommitBundle.message("settings.closeTerminalOnProjectClose.comment"))
             }
             row {
                 checkBox(ClaudeCommitBundle.message("settings.autoStartClaude.label"))

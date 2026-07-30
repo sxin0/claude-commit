@@ -1,7 +1,7 @@
 <idea-plugin>
   <id>com.github.claudecommit</id>
   <name>Claude Code [Kit]</name>
-  <version>1.3.1</version>
+  <version>1.4.0</version>
   <vendor url="https://github.com/sxin0">sxin0</vendor>
   <description><![CDATA[
     <b>Claude Code [Kit]</b> brings the Claude CLI into your JetBrains IDE — both for
@@ -34,8 +34,9 @@
       off).</li>
       <li><b>Bilingual UI</b> — the interface and settings follow the IDE display language
       (English or Simplified Chinese).</li>
-      <li><b>Close terminal on project open</b> — an optional convenience that hides a
-      terminal restored from the previous session, whose shell is already gone.</li>
+      <li><b>Close terminal before the project closes</b> — an optional convenience that
+      closes the Terminal tool window on the way out, so a terminal whose shell is
+      already gone is not restored the next time the project opens.</li>
     </ul>
     Configurable under <b>Settings &gt; Tools &gt; Claude Code [Kit]</b> (Claude CLI path,
     API URL/key, model, timeout, custom prompt, and the terminal options above). The CC
@@ -62,14 +63,19 @@
       切换到第 N 个终端标签页,而不是打开对应编号的工具窗。焦点在别处、或没有第 N 个标签页时,
       仍保持 IDE 原有行为(默认开启,可关闭)。</li>
       <li><b>中英双语界面</b>——界面与设置跟随 IDE 显示语言(英文或简体中文)。</li>
-      <li><b>打开项目时关闭终端</b>——一个可选的便捷项,隐藏从上次会话恢复、其 shell 已不存在的
-      空终端。</li>
+      <li><b>关闭项目前关闭终端</b>——一个可选的便捷项,在项目关闭时先关掉终端工具窗,这样其 shell
+      已不存在的空终端下次打开项目时就不会再被恢复出来。</li>
     </ul>
     可在 <b>Settings &gt; Tools &gt; Claude Code [Kit]</b> 中配置(Claude CLI 路径、API 地址/密钥、
     模型、超时、自定义提示词,以及上述终端选项)。CC 引用与自动打开功能需要启用捆绑的终端插件。
     需要 IDE 2025.3.6 或更高版本。
   ]]></description>
   <change-notes><![CDATA[
+    <b>1.4.0</b> — The auto-close terminal option now runs when the project
+    <i>closes</i> instead of when it opens: the Terminal is hidden before the layout
+    is saved, so it is never restored and no longer flashes open on startup. The
+    setting was renamed accordingly; existing enabled settings migrate automatically.
+
     <b>1.3.1</b> — Renamed the plugin to <b>Claude Code [Kit]</b> (was
     "Claude Code Commit"), matching the naming style of the official
     <i>Claude Code [Beta]</i> plugin. No functional changes.

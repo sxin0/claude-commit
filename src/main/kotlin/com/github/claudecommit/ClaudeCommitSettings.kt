@@ -44,10 +44,14 @@ class ClaudeCommitSettings : PersistentStateComponent<ClaudeCommitSettings.State
         var timeoutSeconds: Int = 120
 
         /**
-         * When true, the Terminal tool window is hidden on project open so a
-         * session restored from the previous run (its contents already gone)
-         * does not reappear. Off by default — leaves the IDE's own behavior.
+         * When true, the Terminal tool window is hidden while the project closes,
+         * so the layout saved on the way out no longer has it open and a session
+         * restored from the previous run (its contents already gone) does not
+         * reappear. Off by default — leaves the IDE's own behavior.
          */
+        var closeTerminalOnProjectClose: Boolean = false
+
+        /** Old persisted name from 1.2.x/1.3.x; migrated in [loadState]. */
         var closeTerminalOnStartup: Boolean = false
 
         /**
@@ -75,6 +79,10 @@ class ClaudeCommitSettings : PersistentStateComponent<ClaudeCommitSettings.State
 
     override fun loadState(loaded: State) {
         XmlSerializerUtil.copyBean(loaded, state)
+        if (state.closeTerminalOnStartup) {
+            state.closeTerminalOnProjectClose = true
+            state.closeTerminalOnStartup = false
+        }
     }
 
     companion object {
