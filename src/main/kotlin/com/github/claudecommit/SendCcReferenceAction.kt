@@ -132,7 +132,7 @@ class SendCcReferenceAction : AnAction(), DumbAware {
 
     private fun notify(project: Project, title: String, content: String, type: NotificationType) {
         NotificationGroupManager.getInstance()
-            .getNotificationGroup("Claude Code Commit")
+            .getNotificationGroup("Claude Code [Kit]")
             .createNotification(title, content, type)
             .notify(project)
     }

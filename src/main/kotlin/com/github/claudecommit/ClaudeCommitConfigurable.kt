@@ -14,10 +14,10 @@ import com.intellij.ui.dsl.builder.rows
 import com.intellij.ui.dsl.listCellRenderer.textListCellRenderer
 
 /**
- * Settings page under Settings > Tools > Claude Code Commit. Labels and comments
+ * Settings page under Settings > Tools > Claude Code [Kit]. Labels and comments
  * come from [ClaudeCommitBundle] so the page follows the IDE display language.
  */
-class ClaudeCommitConfigurable : BoundConfigurable("Claude Code Commit") {
+class ClaudeCommitConfigurable : BoundConfigurable("Claude Code [Kit]") {
 
     private val state get() = ClaudeCommitSettings.getInstance().state
 

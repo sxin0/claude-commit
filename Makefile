@@ -1,4 +1,4 @@
-# Claude Code Commit — build
+# Claude Code [Kit] — build
 #
 # Usage:
 #   make            # compile + package claude-commit-plugin.jar

@@ -1,10 +1,10 @@
 <idea-plugin>
   <id>com.github.claudecommit</id>
-  <name>Claude Code Commit</name>
-  <version>1.3.0</version>
+  <name>Claude Code [Kit]</name>
+  <version>1.3.1</version>
   <vendor url="https://github.com/sxin0">sxin0</vendor>
   <description><![CDATA[
-    <b>Claude Code Commit</b> brings the Claude CLI into your JetBrains IDE — both for
+    <b>Claude Code [Kit]</b> brings the Claude CLI into your JetBrains IDE — both for
     generating commit messages and for feeding file references straight into a Claude
     Code session running in the terminal.<br>
     <br>
@@ -37,12 +37,12 @@
       <li><b>Close terminal on project open</b> — an optional convenience that hides a
       terminal restored from the previous session, whose shell is already gone.</li>
     </ul>
-    Configurable under <b>Settings &gt; Tools &gt; Claude Code Commit</b> (Claude CLI path,
+    Configurable under <b>Settings &gt; Tools &gt; Claude Code [Kit]</b> (Claude CLI path,
     API URL/key, model, timeout, custom prompt, and the terminal options above). The CC
     reference and auto-open features require the bundled Terminal plugin. Requires IDE
     2025.3.6 or newer.
     <hr>
-    <b>Claude Code Commit</b> 把 Claude CLI 集成进你的 JetBrains IDE——既能生成 Git 提交消息,
+    <b>Claude Code [Kit]</b> 把 Claude CLI 集成进你的 JetBrains IDE——既能生成 Git 提交消息,
     也能把文件引用直接送进终端里运行的 Claude Code 会话。<br>
     <br>
     <b>功能</b>
@@ -65,11 +65,15 @@
       <li><b>打开项目时关闭终端</b>——一个可选的便捷项,隐藏从上次会话恢复、其 shell 已不存在的
       空终端。</li>
     </ul>
-    可在 <b>Settings &gt; Tools &gt; Claude Code Commit</b> 中配置(Claude CLI 路径、API 地址/密钥、
+    可在 <b>Settings &gt; Tools &gt; Claude Code [Kit]</b> 中配置(Claude CLI 路径、API 地址/密钥、
     模型、超时、自定义提示词,以及上述终端选项)。CC 引用与自动打开功能需要启用捆绑的终端插件。
     需要 IDE 2025.3.6 或更高版本。
   ]]></description>
   <change-notes><![CDATA[
+    <b>1.3.1</b> — Renamed the plugin to <b>Claude Code [Kit]</b> (was
+    "Claude Code Commit"), matching the naming style of the official
+    <i>Claude Code [Beta]</i> plugin. No functional changes.
+
     <b>1.3.0</b> — Cmd+1…9 (Alt+1…9 on Windows/Linux) switch to the N-th terminal
     tab while the Terminal tool window has the focus. Elsewhere, and when the tab
     does not exist, the IDE's own "Activate &lt;X&gt; Tool Window" still runs.
@@ -104,9 +108,9 @@
   <extensions defaultExtensionNs="com.intellij">
     <applicationConfigurable parentId="tools"
                              id="com.github.claudecommit.settings"
-                             displayName="Claude Code Commit"
+                             displayName="Claude Code [Kit]"
                              instance="com.github.claudecommit.ClaudeCommitConfigurable"/>
-    <notificationGroup id="Claude Code Commit" displayType="BALLOON"/>
+    <notificationGroup id="Claude Code [Kit]" displayType="BALLOON"/>
   </extensions>
 
   <actions>

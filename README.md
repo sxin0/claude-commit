@@ -1,4 +1,4 @@
-# Claude Code Commit
+# Claude Code [Kit]
 
 JetBrains IDE 插件:在提交面板中一键调用 [Claude CLI](https://docs.anthropic.com/en/docs/claude-code) 根据当前改动自动生成 Git 提交消息。
 
@@ -14,7 +14,7 @@ diff 不经过插件中转,因此没有长度截断问题;授权的命令均为�
 提示词分为两部分:
 
 - **内置部分(不可修改)**:定义任务、提交消息约定(首行摘要 ≤ 50 字、要点列表)以及输出格式契约(标签包裹)。提取逻辑依赖这份契约,因此固定在代码中。
-- **自定义部分(可修改)**:在 **Settings > Tools > Claude Code Commit** 中编辑,用于补充语言、风格等要求。默认为:
+- **自定义部分(可修改)**:在 **Settings > Tools > Claude Code [Kit]** 中编辑,用于补充语言、风格等要求。默认为:
 
   ```
   请用中文回答。回答时请遵循以下原则：
@@ -30,7 +30,7 @@ diff 不经过插件中转,因此没有长度截断问题;授权的命令均为�
 
 ## 设置项
 
-**Settings > Tools > Claude Code Commit**:
+**Settings > Tools > Claude Code [Kit]**:
 
 - **Claude 命令** — CLI 的命令名或绝对路径,默认 `claude`。IDE 从 GUI 启动时若找不到命令,填绝对路径(`which claude` 查看)
 - **API 地址** — Anthropic 兼容 API 地址。留空使用 claude CLI 自身配置;使用第三方中转时填其地址

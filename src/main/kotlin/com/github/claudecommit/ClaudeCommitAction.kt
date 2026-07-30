@@ -27,7 +27,7 @@ import java.util.concurrent.ConcurrentHashMap
 class ClaudeCommitAction : AnAction(), DumbAware {
 
     private companion object {
-        const val NOTIFICATION_GROUP_ID = "Claude Code Commit"
+        const val NOTIFICATION_GROUP_ID = "Claude Code [Kit]"
 
         /** Indicator of the generation currently running in each project — used to stop it. */
         val running = ConcurrentHashMap<Project, ProgressIndicator>()
