@@ -21,8 +21,10 @@ import javax.swing.SwingUtilities
  *
  * Those shortcuts keep their IDE meaning everywhere else: this action takes over
  * only when the focus is inside the Terminal tool window *and* the requested tab
- * exists. Press Cmd+5 with three tabs open and [update] leaves the action disabled,
- * so the IDE's own "Activate <X> Tool Window" runs as before.
+ * exists *and* is not already the selected one. Press Cmd+5 with three tabs open
+ * and [update] leaves the action disabled, so the IDE's own "Activate <X> Tool
+ * Window" runs as before; press Cmd+1 while already on the first tab and the same
+ * fall-through happens, so the editor's default Cmd+1 is not swallowed.
  *
  * Two platform details make this work:
  *  - The Reworked Terminal normally swallows keystrokes and forwards them to the
@@ -50,13 +52,22 @@ abstract class SwitchTerminalTabAction(private val tabNumber: Int) : AnAction(),
 
     /**
      * The tab this action would switch to, or null when it must not fire at all:
-     * the feature is off, the focus is not in the terminal, or there is no N-th tab.
-     * Shared with the promoter so both agree on when the shortcut is ours.
+     * the feature is off, the focus is not in the terminal, there is no N-th tab,
+     * or the N-th tab is already selected — in that last case we yield the keystroke
+     * back to the IDE so its own "Activate <X> Tool Window" default runs (e.g. pressing
+     * Cmd+1 again while already on the first terminal tab activates the Project tool
+     * window instead of being swallowed). Shared with the promoter so both agree on
+     * when the shortcut is ours.
      */
     internal fun targetTab(context: DataContext): Content? {
         if (!ClaudeCommitSettings.getInstance().state.switchTerminalTabWithNumberKeys) return null
         val manager = focusedTerminalContentManager(context) ?: return null
-        return if (tabNumber <= manager.contentCount) manager.getContent(tabNumber - 1) else null
+        if (tabNumber > manager.contentCount) return null
+        val tab = manager.getContent(tabNumber - 1)
+        // Already on this tab: let the keystroke fall through to the IDE default
+        // rather than re-selecting the same tab and eating the shortcut.
+        if (manager.selectedContent === tab) return null
+        return tab
     }
 
     /** The Terminal tool window's content manager, but only while that window holds the focus. */

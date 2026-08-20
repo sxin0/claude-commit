@@ -1,7 +1,7 @@
 <idea-plugin>
   <id>com.github.claudecommit</id>
   <name>Claude Code [Kit]</name>
-  <version>1.4.0</version>
+  <version>1.4.1</version>
   <vendor url="https://github.com/sxin0">sxin0</vendor>
   <description><![CDATA[
     <b>Claude Code [Kit]</b> brings the Claude CLI into your JetBrains IDE — both for
@@ -29,9 +29,10 @@
       typed in automatically (on by default; can be turned off).</li>
       <li><b>Switch terminal tabs with Cmd+1…9</b> — while the focus is inside the
       Terminal tool window, Cmd+N (Alt+N on Windows/Linux) selects the N-th terminal
-      tab instead of opening the numbered tool window. Anywhere else, and when there
-      is no N-th tab, the IDE keeps its own behavior (on by default; can be turned
-      off).</li>
+      tab instead of opening the numbered tool window. Anywhere else, when there is
+      no N-th tab, and when that tab is already the selected one, the IDE keeps its
+      own behavior — so pressing the same shortcut again opens the numbered tool
+      window as usual (on by default; can be turned off).</li>
       <li><b>Bilingual UI</b> — the interface and settings follow the IDE display language
       (English or Simplified Chinese).</li>
       <li><b>Close terminal before the project closes</b> — an optional convenience that
@@ -60,8 +61,9 @@
       <li><b>自动打开 Claude Code</b>——发送引用时如果没有打开的终端,会自动新建终端、在其中启动
       Claude CLI,并把引用输入进去(默认开启,可关闭)。</li>
       <li><b>Cmd+1~9 切换终端标签页</b>——焦点在终端工具窗内时,Cmd+N(Windows/Linux 为 Alt+N)
-      切换到第 N 个终端标签页,而不是打开对应编号的工具窗。焦点在别处、或没有第 N 个标签页时,
-      仍保持 IDE 原有行为(默认开启,可关闭)。</li>
+      切换到第 N 个终端标签页,而不是打开对应编号的工具窗。焦点在别处、没有第 N 个标签页、
+      或已经在第 N 个标签页时,仍保持 IDE 原有行为——所以再按一次同样的快捷键,会照常打开
+      对应编号的工具窗(默认开启,可关闭)。</li>
       <li><b>中英双语界面</b>——界面与设置跟随 IDE 显示语言(英文或简体中文)。</li>
       <li><b>关闭项目前关闭终端</b>——一个可选的便捷项,在项目关闭时先关掉终端工具窗,这样其 shell
       已不存在的空终端下次打开项目时就不会再被恢复出来。</li>
@@ -71,6 +73,11 @@
     需要 IDE 2025.3.6 或更高版本。
   ]]></description>
   <change-notes><![CDATA[
+    <b>1.4.1</b> — Cmd/Alt+N no longer swallows the keystroke when the N-th terminal
+    tab is already the selected one: the shortcut falls through to the IDE, so
+    pressing Cmd+1 again while on the first terminal tab activates the Project tool
+    window as usual instead of doing nothing.
+
     <b>1.4.0</b> — The auto-close terminal option now runs when the project
     <i>closes</i> instead of when it opens: the Terminal is hidden before the layout
     is saved, so it is never restored and no longer flashes open on startup. The
