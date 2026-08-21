@@ -1,7 +1,7 @@
 <idea-plugin>
   <id>com.github.claudecommit</id>
   <name>Claude Code [Kit]</name>
-  <version>1.4.1</version>
+  <version>1.5.0</version>
   <vendor url="https://github.com/sxin0">sxin0</vendor>
   <description><![CDATA[
     <b>Claude Code [Kit]</b> brings the Claude CLI into your JetBrains IDE — both for
@@ -33,6 +33,16 @@
       no N-th tab, and when that tab is already the selected one, the IDE keeps its
       own behavior — so pressing the same shortcut again opens the numbered tool
       window as usual (on by default; can be turned off).</li>
+      <li><b>Switch project windows with Option+1…9</b> (macOS) — Option+N brings the
+      N-th open project window to the front, numbered in the order the windows were
+      opened. It works from inside the terminal too, so you can jump between projects
+      without leaving a Claude Code session (on by default; can be turned off). On
+      Windows/Linux the actions ship without a shortcut, since Alt+1…9 belongs to the
+      IDE tool windows there — bind your own under Settings &gt; Keymap.<br>
+      <i>Note: on non-US Mac keyboard layouts Option+digit is how some characters are
+      typed (German <code>{</code> <code>}</code> = Option+8/9, Spanish <code>@</code> =
+      Option+2). The shortcut takes those keystrokes over — turn the option off if you
+      need them.</i></li>
       <li><b>Bilingual UI</b> — the interface and settings follow the IDE display language
       (English or Simplified Chinese).</li>
       <li><b>Close terminal before the project closes</b> — an optional convenience that
@@ -64,6 +74,13 @@
       切换到第 N 个终端标签页,而不是打开对应编号的工具窗。焦点在别处、没有第 N 个标签页、
       或已经在第 N 个标签页时,仍保持 IDE 原有行为——所以再按一次同样的快捷键,会照常打开
       对应编号的工具窗(默认开启,可关闭)。</li>
+      <li><b>Option+1~9 切换项目窗口</b>(macOS)——Option+N 把第 N 个已打开的项目窗口切到前台,
+      编号按窗口打开的先后顺序排列。焦点在终端里时同样生效,因此不用离开 Claude Code 会话就能
+      在多个项目之间跳转(默认开启,可关闭)。Windows/Linux 上 Alt+1~9 属于 IDE 工具窗,故不预设
+      快捷键,可在 Settings &gt; Keymap 中自行绑定。<br>
+      <i>注意:在非美式 Mac 键盘布局上,Option+数字是输入字符用的(德语 <code>{</code> <code>}</code>
+      = Option+8/9,西班牙语 <code>@</code> = Option+2)。本快捷键会接管这些按键,需要它们的话请关闭
+      该选项。</i></li>
       <li><b>中英双语界面</b>——界面与设置跟随 IDE 显示语言(英文或简体中文)。</li>
       <li><b>关闭项目前关闭终端</b>——一个可选的便捷项,在项目关闭时先关掉终端工具窗,这样其 shell
       已不存在的空终端下次打开项目时就不会再被恢复出来。</li>
@@ -73,6 +90,11 @@
     需要 IDE 2025.3.6 或更高版本。
   ]]></description>
   <change-notes><![CDATA[
+    <b>1.5.0</b> — Option+1…9 (macOS) switch to the N-th open project window,
+    numbered in the order the windows were opened. The shortcut also works while
+    the focus is inside the Terminal tool window, so a Claude Code session no
+    longer has to be left behind to switch projects.
+
     <b>1.4.1</b> — Cmd/Alt+N no longer swallows the keystroke when the N-th terminal
     tab is already the selected one: the shortcut falls through to the IDE, so
     pressing Cmd+1 again while on the first terminal tab activates the Project tool
@@ -147,5 +169,39 @@
               icon="/icons/claude.svg"/>
       <separator/>
     </group>
+    <!-- Bring the N-th open project window to the front. Bound only on the macOS
+         keymap, where Alt+N is free (the numbered tool windows use Cmd+N there);
+         on the other keymaps Alt+N *is* "Activate <X> Tool Window", so these ship
+         without a shortcut and can be bound by hand in Settings > Keymap.
+         Registered here rather than in claude-commit-terminal.xml because the
+         feature itself does not need the Terminal plugin — only the allow-list
+         provider that makes it work inside the terminal does. -->
+    <action id="ClaudeCommit.SwitchProjectWindow1" class="com.github.claudecommit.SwitchProjectWindow1">
+      <keyboard-shortcut keymap="Mac OS X 10.5+" first-keystroke="alt 1"/>
+    </action>
+    <action id="ClaudeCommit.SwitchProjectWindow2" class="com.github.claudecommit.SwitchProjectWindow2">
+      <keyboard-shortcut keymap="Mac OS X 10.5+" first-keystroke="alt 2"/>
+    </action>
+    <action id="ClaudeCommit.SwitchProjectWindow3" class="com.github.claudecommit.SwitchProjectWindow3">
+      <keyboard-shortcut keymap="Mac OS X 10.5+" first-keystroke="alt 3"/>
+    </action>
+    <action id="ClaudeCommit.SwitchProjectWindow4" class="com.github.claudecommit.SwitchProjectWindow4">
+      <keyboard-shortcut keymap="Mac OS X 10.5+" first-keystroke="alt 4"/>
+    </action>
+    <action id="ClaudeCommit.SwitchProjectWindow5" class="com.github.claudecommit.SwitchProjectWindow5">
+      <keyboard-shortcut keymap="Mac OS X 10.5+" first-keystroke="alt 5"/>
+    </action>
+    <action id="ClaudeCommit.SwitchProjectWindow6" class="com.github.claudecommit.SwitchProjectWindow6">
+      <keyboard-shortcut keymap="Mac OS X 10.5+" first-keystroke="alt 6"/>
+    </action>
+    <action id="ClaudeCommit.SwitchProjectWindow7" class="com.github.claudecommit.SwitchProjectWindow7">
+      <keyboard-shortcut keymap="Mac OS X 10.5+" first-keystroke="alt 7"/>
+    </action>
+    <action id="ClaudeCommit.SwitchProjectWindow8" class="com.github.claudecommit.SwitchProjectWindow8">
+      <keyboard-shortcut keymap="Mac OS X 10.5+" first-keystroke="alt 8"/>
+    </action>
+    <action id="ClaudeCommit.SwitchProjectWindow9" class="com.github.claudecommit.SwitchProjectWindow9">
+      <keyboard-shortcut keymap="Mac OS X 10.5+" first-keystroke="alt 9"/>
+    </action>
   </actions>
 </idea-plugin>

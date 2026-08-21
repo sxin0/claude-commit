@@ -95,6 +95,16 @@ class ClaudeCommitConfigurable : BoundConfigurable("Claude Code [Kit]") {
                     .comment(ClaudeCommitBundle.message("settings.switchTerminalTab.comment"))
             }
         }
+
+        // Switching project windows is not a terminal feature (it works from the
+        // editor too), so it gets its own group rather than joining the one above.
+        group(ClaudeCommitBundle.message("settings.window.group")) {
+            row {
+                checkBox(ClaudeCommitBundle.message("settings.switchProjectWindow.label"))
+                    .bindSelected(state::switchProjectWindowWithNumberKeys)
+                    .comment(ClaudeCommitBundle.message("settings.switchProjectWindow.comment"))
+            }
+        }
     }
 
     private fun languageLabel(language: CommitLanguage): String = when (language) {

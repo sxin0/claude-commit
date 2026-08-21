@@ -71,6 +71,17 @@ class ClaudeCommitSettings : PersistentStateComponent<ClaudeCommitSettings.State
          * See [SwitchTerminalTabAction].
          */
         var switchTerminalTabWithNumberKeys: Boolean = true
+
+        /**
+         * When true, Option+1…9 bring the N-th open project window to the front.
+         * On by default, but only bound on the macOS keymap — elsewhere Alt+1…9 is
+         * the IDE's own "Activate <X> Tool Window" family, so the actions ship
+         * without a shortcut and this flag only matters once the user binds one.
+         * Also gates [SwitchProjectWindowAllowedActionsProvider], i.e. whether the
+         * terminal lets Option+N through instead of typing it into the shell.
+         * See [SwitchProjectWindowAction].
+         */
+        var switchProjectWindowWithNumberKeys: Boolean = true
     }
 
     private var state = State()

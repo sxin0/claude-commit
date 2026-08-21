@@ -22,6 +22,13 @@
          of deciding the winner — see SwitchTerminalTabActionPromoter. -->
     <actionPromoter implementation="com.github.claudecommit.SwitchTerminalTabActionPromoter"/>
   </extensions>
+  <!-- The Reworked Terminal only lets the shortcuts of an allow-list of IDE actions
+       through to the action system; everything else is typed into the shell. This
+       adds the project-switch actions to that list so Option+N works from inside a
+       Claude Code session — see SwitchProjectWindowAllowedActionsProvider. -->
+  <extensions defaultExtensionNs="org.jetbrains.plugins.terminal">
+    <allowedActionsProvider implementation="com.github.claudecommit.SwitchProjectWindowAllowedActionsProvider"/>
+  </extensions>
   <actions>
     <action id="ClaudeCommit.SendCcReference"
             class="com.github.claudecommit.SendCcReferenceAction"
