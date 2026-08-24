@@ -10,7 +10,6 @@ import com.intellij.openapi.project.DumbAware
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.wm.ToolWindowManager
 import com.intellij.terminal.frontend.toolwindow.TerminalToolWindowTabsManager
-import com.intellij.terminal.frontend.toolwindow.findTabByContent
 import com.intellij.ui.content.Content
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -150,7 +149,12 @@ private const val READY_SETTLE_MS = 300L
 private object ReworkedTerminalSender {
     /** Sends [text] as input (without executing) to the tab owning [content]; false if the tab is not a Reworked Terminal. */
     fun send(project: Project, content: Content, text: String): Boolean {
-        val tab = TerminalToolWindowTabsManager.getInstance(project).findTabByContent(content) ?: return false
+        // Deliberately not the findTabByContent() extension: that top-level function was
+        // dropped in 2026.2 EAP (262.10315.19) while the interface below stayed put, so
+        // linking against it broke the plugin. This is what it did, spelled out.
+        // getTabs() is @RequiresEdt — actionPerformed always runs on the EDT.
+        val tab = TerminalToolWindowTabsManager.getInstance(project).tabs
+            .firstOrNull { it.content == content } ?: return false
         tab.view.sendText(text)
         return true
     }
