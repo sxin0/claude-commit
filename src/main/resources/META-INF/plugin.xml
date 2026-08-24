@@ -90,41 +90,41 @@
     需要 IDE 2025.3.6 或更高版本。
   ]]></description>
   <change-notes><![CDATA[
-    <b>1.5.0</b> — Option+1…9 (macOS) switch to the N-th open project window,
+    <p><b>1.5.0</b> — Option+1…9 (macOS) switch to the N-th open project window,
     numbered in the order the windows were opened. The shortcut also works while
     the focus is inside the Terminal tool window, so a Claude Code session no
-    longer has to be left behind to switch projects.
+    longer has to be left behind to switch projects.</p>
 
-    <b>1.4.1</b> — Cmd/Alt+N no longer swallows the keystroke when the N-th terminal
+    <p><b>1.4.1</b> — Cmd/Alt+N no longer swallows the keystroke when the N-th terminal
     tab is already the selected one: the shortcut falls through to the IDE, so
     pressing Cmd+1 again while on the first terminal tab activates the Project tool
-    window as usual instead of doing nothing.
+    window as usual instead of doing nothing.</p>
 
-    <b>1.4.0</b> — The auto-close terminal option now runs when the project
+    <p><b>1.4.0</b> — The auto-close terminal option now runs when the project
     <i>closes</i> instead of when it opens: the Terminal is hidden before the layout
     is saved, so it is never restored and no longer flashes open on startup. The
-    setting was renamed accordingly; existing enabled settings migrate automatically.
+    setting was renamed accordingly; existing enabled settings migrate automatically.</p>
 
-    <b>1.3.1</b> — Renamed the plugin to <b>Claude Code [Kit]</b> (was
+    <p><b>1.3.1</b> — Renamed the plugin to <b>Claude Code [Kit]</b> (was
     "Claude Code Commit"), matching the naming style of the official
-    <i>Claude Code [Beta]</i> plugin. No functional changes.
+    <i>Claude Code [Beta]</i> plugin. No functional changes.</p>
 
-    <b>1.3.0</b> — Cmd+1…9 (Alt+1…9 on Windows/Linux) switch to the N-th terminal
+    <p><b>1.3.0</b> — Cmd+1…9 (Alt+1…9 on Windows/Linux) switch to the N-th terminal
     tab while the Terminal tool window has the focus. Elsewhere, and when the tab
-    does not exist, the IDE's own "Activate &lt;X&gt; Tool Window" still runs.
+    does not exist, the IDE's own "Activate &lt;X&gt; Tool Window" still runs.</p>
 
-    <b>1.2.0</b> — Optional setting to auto-close the Terminal tool window when a
+    <p><b>1.2.0</b> — Optional setting to auto-close the Terminal tool window when a
     project opens (independent of commit-message generation; requires the Terminal
-    plugin). Kept in its own group on the settings page.
+    plugin). Kept in its own group on the settings page.</p>
 
-    <b>1.1.0</b> — Editor popup menu actions "复制 CC 引用" (copies a Claude Code
+    <p><b>1.1.0</b> — Editor popup menu actions "复制 CC 引用" (copies a Claude Code
     reference, @path#Lstart-end, for the current file and selection) and
-    "发送 CC 引用" (types the reference into the active terminal tab).
+    "发送 CC 引用" (types the reference into the active terminal tab).</p>
 
-    <b>1.0.1</b> — Save API Key in plugin settings.
+    <p><b>1.0.1</b> — Save API Key in plugin settings.</p>
 
-    <b>1.0.0</b> — Initial release: commit-panel button, Claude CLI integration,
-    tag-based message extraction, customizable prompt.
+    <p><b>1.0.0</b> — Initial release: commit-panel button, Claude CLI integration,
+    tag-based message extraction, customizable prompt.</p>
   ]]></change-notes>
   <!-- Requires 2025.3.6 (build 253.33813.25) or newer: ReworkedTerminalSender links
        against the reworked-terminal frontend API (com.intellij.terminal.frontend.toolwindow
