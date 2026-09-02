@@ -1,7 +1,7 @@
 <idea-plugin>
   <id>com.github.claudecommit</id>
   <name>Claude Code [Kit]</name>
-  <version>1.5.0</version>
+  <version>1.5.1</version>
   <vendor url="https://github.com/sxin0">sxin0</vendor>
   <description><![CDATA[
     <b>Claude Code [Kit]</b> brings the Claude CLI into your JetBrains IDE — both for
@@ -34,9 +34,10 @@
       own behavior — so pressing the same shortcut again opens the numbered tool
       window as usual (on by default; can be turned off).</li>
       <li><b>Switch project windows with Option+1…9</b> (macOS) — Option+N brings the
-      N-th open project window to the front, numbered in the order the windows were
-      opened. It works from inside the terminal too, so you can jump between projects
-      without leaving a Claude Code session (on by default; can be turned off). On
+      N-th open project window to the front and moves the focus into it, numbered the
+      way the IDE's own Window menu lists them (by project name), so the numbers stay
+      put across restarts. It works from inside the terminal too, so you can jump
+      between projects without leaving a Claude Code session (on by default). On
       Windows/Linux the actions ship without a shortcut, since Alt+1…9 belongs to the
       IDE tool windows there — bind your own under Settings &gt; Keymap.<br>
       <i>Note: on non-US Mac keyboard layouts Option+digit is how some characters are
@@ -74,8 +75,9 @@
       切换到第 N 个终端标签页,而不是打开对应编号的工具窗。焦点在别处、没有第 N 个标签页、
       或已经在第 N 个标签页时,仍保持 IDE 原有行为——所以再按一次同样的快捷键,会照常打开
       对应编号的工具窗(默认开启,可关闭)。</li>
-      <li><b>Option+1~9 切换项目窗口</b>(macOS)——Option+N 把第 N 个已打开的项目窗口切到前台,
-      编号按窗口打开的先后顺序排列。焦点在终端里时同样生效,因此不用离开 Claude Code 会话就能
+      <li><b>Option+1~9 切换项目窗口</b>(macOS)——Option+N 把第 N 个已打开的项目窗口切到前台
+      并把焦点移进去,编号与 IDE 自带的 Window 菜单一致(按项目名排序),重启后编号也不会变。
+      焦点在终端里时同样生效,因此不用离开 Claude Code 会话就能
       在多个项目之间跳转(默认开启,可关闭)。Windows/Linux 上 Alt+1~9 属于 IDE 工具窗,故不预设
       快捷键,可在 Settings &gt; Keymap 中自行绑定。<br>
       <i>注意:在非美式 Mac 键盘布局上,Option+数字是输入字符用的(德语 <code>{</code> <code>}</code>
@@ -90,6 +92,16 @@
     需要 IDE 2025.3.6 或更高版本。
   ]]></description>
   <change-notes><![CDATA[
+    <p><b>1.5.1</b> — Option+1…9 project switching made reliable. Option+N now invokes
+    the N-th entry of the IDE's own Window menu, so the numbering is the menu's (by
+    project name) instead of the order the windows happened to finish opening in —
+    which shifted between restarts and whenever a project was closed — and the switch
+    moves the focus into the target window, where it previously could raise the window
+    without taking the focus. Inside the terminal the shortcut no longer goes dead or
+    starts typing into the shell after a project window is opened or closed. The number
+    of the window you are already in re-focuses it instead of typing a stray character
+    (Option+1 = "¡") into the editor.</p>
+
     <p><b>1.5.0</b> — Option+1…9 (macOS) switch to the N-th open project window,
     numbered in the order the windows were opened. The shortcut also works while
     the focus is inside the Terminal tool window, so a Claude Code session no

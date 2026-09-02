@@ -12,13 +12,16 @@ import com.intellij.terminal.frontend.view.TerminalAllowedActionsProvider
  * "Activate <X> Tool Window" family that is already on it). Option+N is on no such
  * action, so without this provider it would be typed into the shell instead.
  *
- * The list is re-read every time the terminal takes the focus, so returning nothing
- * while the feature cannot do anything is enough to hand Option+N back to the shell
- * — no restart. That second condition matters: a keystroke on this list is offered
- * to the action system whether or not the action turns out to be enabled, and one
- * that no action handles is simply eaten. With a single project window open there is
- * nothing to switch to, so the whole range is left to the shell instead of turning
- * Option+1…9 into nine dead keys.
+ * The list is read once each time the terminal takes the focus and cached until the
+ * next time, so the only condition that belongs here is one that cannot change
+ * underneath that cache: the feature switch. In particular the number of open
+ * project windows must *not* be consulted — it changes without the terminal losing
+ * the focus (a second project finishing its restore after a restart, a window closed
+ * from its own title bar), and a stale answer would either type Option+N into the
+ * shell or leave it dead until the user clicks out of the terminal and back in.
+ * Nothing is lost by always listing the ids: when the N-th window does not exist the
+ * action is disabled, and the terminal's own fallback for a listed-but-disabled
+ * shortcut is to send the keystroke to the shell, as if it had never been listed.
  *
  * Registered only from claude-commit-terminal.xml, and only useful with the Reworked
  * terminal engine: the older block terminal has the same allow-list hard-coded with
@@ -30,7 +33,6 @@ class SwitchProjectWindowAllowedActionsProvider : TerminalAllowedActionsProvider
 
     override fun getActionIds(): List<String> {
         if (!ClaudeCommitSettings.getInstance().state.switchProjectWindowWithNumberKeys) return emptyList()
-        if (openProjectWindows().size < 2) return emptyList()
         return ACTION_IDS
     }
 
