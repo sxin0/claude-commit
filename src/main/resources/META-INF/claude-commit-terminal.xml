@@ -30,6 +30,7 @@
        adds the project-switch actions to that list so Option+N works from inside a
        Claude Code session — see SwitchProjectWindowAllowedActionsProvider. -->
   <extensions defaultExtensionNs="org.jetbrains.plugins.terminal">
+    <localTerminalCustomizer implementation="com.github.claudecommit.TerminalIconEnvironmentCustomizer"/>
     <allowedActionsProvider implementation="com.github.claudecommit.SwitchProjectWindowAllowedActionsProvider"/>
   </extensions>
   <actions>

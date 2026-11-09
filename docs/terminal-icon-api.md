@@ -5,8 +5,10 @@ An optional, authenticated loopback API for **real leading icons in Terminal too
 ## Connect
 
 1. Settings → Tools → Claude Code [Kit] → **Terminal tab icon API** → enable and **Apply**.
-2. Click **Copy connection environment** and paste the commands into the intended **local** shell. This sets `CC_KIT_TERMINAL_ICON_URL` and `CC_KIT_TERMINAL_ICON_TOKEN` for that IDE process. The plugin does not change shell configuration or install hooks.
-3. The IDE already supplies `$TERM_SESSION_ID`; pass it explicitly on every request. Never target a tab by title, position, or focus.
+2. Open a **new local terminal tab**, then start CC there. The plugin automatically injects `CC_KIT_TERMINAL_ICON_URL` and `CC_KIT_TERMINAL_ICON_TOKEN` for the IDE instance that starts that shell. Each GoLand/PhpStorm/WebStorm instance supplies its own connection. Nothing is written to shell configuration and no hooks are installed.
+3. The IDE already supplies `$TERM_SESSION_ID`; pass it explicitly on every request. Never target a tab by title, position, or focus. Environment injection does not enable a separate sender plugin's own toggle.
+
+For an existing local shell, **Copy connection environment** remains available: paste the commands into that shell and then start/restart CC to inherit them. A running CC process cannot acquire environment changes made in another process.
 
 The endpoint uses the IDE built-in server's actual port:
 
@@ -16,7 +18,11 @@ Authorization: Bearer <per-process token>
 Content-Type: application/json
 ```
 
-The copied commands use POSIX shell syntax; on Windows, assign the two variables using the syntax of the chosen shell. Credentials are not saved to plugin settings. Restarting the IDE, toggling the API, or **Reset connection and clear icons** invalidates the old connection and clears overrides. Copy fresh commands afterwards. Reset is also recovery if a client loses its lease token.
+Copied fallback commands use POSIX shell syntax; on Windows, assign the variables using the chosen shell's syntax. Credentials are never saved to plugin settings. Restarting the IDE, toggling the API, or **Reset connection and clear icons** invalidates old connections and clears overrides. **New local terminals receive the new pair automatically**; already-running shells/CC keep stale values and must be recreated/restarted or explicitly updated. Reset also recovers a lost lease token.
+
+The startup callback first removes inherited values of these two reserved variables, so terminals cannot accidentally reuse another IDE's connection. It injects only when the API is enabled, the actual execution descriptor is local, Remote Development is absent, and the callback runs off EDT. Unknown environments, remote execution, disabled API, unavailable SDK capabilities or startup failures leave both variables absent and do not block ordinary terminal startup. Server readiness is shared across terminals with a three-second per-waiter budget; one cancelled waiter does not cancel another's startup. The real server must be running—no guessed default port is advertised.
+
+The connection is rechecked against enable/reset when the pair is applied. A reset immediately after injection can still invalidate it before the shell actually starts; open a new terminal in that case. Shell profiles or later environment customizers can override values; this plugin does not rewrite those configurations. Local subprocesses inherit credentials: the local-descriptor check excludes IDE-managed remote environments, but cannot prevent a local shell/profile from deliberately forwarding values through `ssh`, `docker` or `wsl`. Do not put these values in global shell profiles or logs.
 
 ## Static SVG example
 
@@ -136,7 +142,7 @@ This is **not an unrestricted SVG viewer**. Unsupported features fail rather tha
 
 Errors are `{"id":<id-or-null>,"error":{"code":"...","message":"..."}}`. Examples: `invalid_request`, `invalid_asset`, `unauthorized`, `forbidden`, `session_not_found`, `session_not_ready`, `ambiguous_session`, `unsupported_terminal`, `unsupported`, `lease_conflict`, `revision_conflict`, `resource_limit`, `busy`, `disabled`, `cancelled`, `render_failed`, `internal_error`. Validation failures leave the existing icon untouched. The platform can reject requests before dispatch (for example Origin checks), producing its own 404 rather than an RPC envelope.
 
-Compilation/testing currently uses the installed **263 SDK**. The plugin's minimum build remains **253.33813.25**, but loading the main plugin on 253 and supporting the new icon API on 253 are **separate, unverified gates**. Reworked/renderer APIs are evolving/internal; unavailable execution-descriptor APIs return unsupported rather than guessing. `make test` is not a replacement for live IDE, Netty dispatch, optional-plugin, scale, and minimum-SDK acceptance.
+Compilation/testing currently uses the installed **263 SDK**. Automatic-injection environment policy, actual adapter methods, server-readiness cancellation/retry, and API generation/reset interleavings have automated coverage. The terminal subsystem also compiles and passes these tests against the installed PhpStorm 263 SDK using IDEA's compiler; a full PhpStorm SDK build still needs the existing Makefile's product-specific VCS classpath to be extended. Actual Classic/Reworked startup-extension invocation remains a live IDE acceptance gate. The plugin's minimum build remains **253.33813.25**, but loading the main plugin on 253 and supporting the new icon API on 253 are **separate, unverified gates**. Reworked/renderer APIs are evolving/internal; unavailable execution-descriptor APIs return unsupported rather than guessing. `make test` is not a replacement for live IDE, Netty dispatch, optional-plugin, scale, and minimum-SDK acceptance.
 
 ## Developer verification
 

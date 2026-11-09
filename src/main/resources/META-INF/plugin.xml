@@ -1,7 +1,7 @@
 <idea-plugin>
   <id>com.github.claudecommit</id>
   <name>Claude Code [Kit]</name>
-  <version>1.5.1</version>
+  <version>1.6.0</version>
   <vendor url="https://github.com/sxin0">sxin0</vendor>
   <description><![CDATA[
     <b>Claude Code [Kit]</b> brings the Claude CLI into your JetBrains IDE — both for
@@ -44,6 +44,12 @@
       typed (German <code>{</code> <code>}</code> = Option+8/9, Spanish <code>@</code> =
       Option+2). The shortcut takes those keystrokes over — turn the option off if you
       need them.</i></li>
+      <li><b>Terminal session icons</b> — an opt-in local API lets a compatible sender
+      update a specific terminal tab's leading icon with custom SVG or animation,
+      without renaming it or moving focus. Newly created local terminals automatically
+      receive this IDE instance's connection, including after an IDE restart. Lease,
+      revision and optional expiry protect against stale updates; clear/reset restores
+      the original icon. Requires the Terminal plugin and a separate status sender.</li>
       <li><b>Bilingual UI</b> — the interface and settings follow the IDE display language
       (English or Simplified Chinese).</li>
       <li><b>Close terminal before the project closes</b> — an optional convenience that
@@ -83,6 +89,10 @@
       <i>注意:在非美式 Mac 键盘布局上,Option+数字是输入字符用的(德语 <code>{</code> <code>}</code>
       = Option+8/9,西班牙语 <code>@</code> = Option+2)。本快捷键会接管这些按键,需要它们的话请关闭
       该选项。</i></li>
+      <li><b>终端会话图标</b>——启用本地接口后,配套发送端可按终端会话精确更新标签页左侧的
+      自定义 SVG 或动画图标,不修改标题、不抢焦点。新建本机终端会自动获得所属 IDE 的连接信息,
+      IDE 重启后无需反复手工 export。通过租约、revision 和可选到期时间防止旧状态覆盖,
+      清除或重置时恢复原图标。需要启用终端插件并配合独立的状态发送端。</li>
       <li><b>中英双语界面</b>——界面与设置跟随 IDE 显示语言(英文或简体中文)。</li>
       <li><b>关闭项目前关闭终端</b>——一个可选的便捷项,在项目关闭时先关掉终端工具窗,这样其 shell
       已不存在的空终端下次打开项目时就不会再被恢复出来。</li>
@@ -92,6 +102,29 @@
     需要 IDE 2025.3.6 或更高版本。
   ]]></description>
   <change-notes><![CDATA[
+    <p><b>1.6.0 — Terminal session icons / 终端会话图标</b></p>
+    <ul>
+      <li>New opt-in terminal-tab icon API: compatible senders can update a specific
+      session with custom static SVG or multi-frame animation, without changing the
+      tab title or focus. Lease/revision checks and optional TTL prevent stale updates;
+      clear, expiry and reset restore the original icon.</li>
+      <li>New local terminals automatically inherit the connection of their owning
+      IDE instance. Restarting the IDE no longer requires manual exports for new
+      terminals; different IDE instances remain isolated. Existing shells can still
+      use Copy connection environment and must restart CC to inherit changed values.</li>
+      <li>新增默认关闭的终端标签页图标接口,支持按会话更新自定义 SVG 静态图标与多帧动画,
+      不改标题、不抢焦点;提供租约、revision、TTL 和清除恢复。</li>
+      <li>启用后新建本机终端自动注入所属 IDE 的连接信息,IDE 重启后不必每次手工 export;
+      不同 IDE 实例互相隔离。已有终端保留手工复制入口,更新环境后需重新启动 CC。</li>
+      <li>Enable under Settings &gt; Tools &gt; Claude Code [Kit] &gt; Terminal tab icon API.
+      Requires the bundled Terminal plugin and a separate compatible status sender.
+      IDE-managed remote/WSL/container execution is not injected. 在设置中启用后使用;
+      状态同步需要配套发送端,不修改 shell 配置或自动安装 hooks。</li>
+    </ul>
+    <p><img src="https://raw.githubusercontent.com/sxin0/claude-commit/codex/close-terminal-before-project-close/docs/images/terminal-session-icons.png"
+      alt="Terminal tabs with custom Claude Code session icons / 终端会话图标效果" width="776"/></p>
+    <p><a href="https://github.com/sxin0/claude-commit/blob/codex/close-terminal-before-project-close/docs/terminal-icon-api.md">API documentation / 接口文档</a></p>
+
     <p><b>1.5.1</b> — Option+1…9 project switching made reliable. Option+N now invokes
     the N-th entry of the IDE's own Window menu, so the numbering is the menu's (by
     project name) instead of the order the windows happened to finish opening in —

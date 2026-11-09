@@ -4,6 +4,7 @@ private val session = "a5747e71-903d-415f-a15f-0cb79ff33f24"
 private val svg = "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 16 16\"><circle cx=\"8\" cy=\"8\" r=\"6\" fill=\"#d77757\"/></svg>"
 
 fun main() {
+    runTerminalIconEnvironmentTests()
     runTerminalIconAssetTests()
     val jsonSvg = com.google.gson.Gson().toJson(svg)
     val request = """{"id":"one","method":"surface.icon.set","params":{"terminal_session_id":"$session","owner_id":"tests","asset":{"frames":[{"svg":$jsonSvg,"duration_ms":100}],"loop":false}}}"""

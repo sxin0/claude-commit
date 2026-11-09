@@ -19,8 +19,29 @@ import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicBoolean
 
 @Service(Service.Level.APP)
-internal class TerminalIconApi : Disposable {
-    internal data class Connection(val instance: String, val token: String, val generation: Long) {
+internal class TerminalIconApi private constructor(
+    private val readEnabled: () -> Boolean,
+    private val writeEnabled: (Boolean) -> Unit,
+    private val serverReadiness: TerminalIconServerReadiness,
+    private val backendAvailable: () -> Boolean,
+    private val clearIcons: () -> Unit,
+    private val checkPreparationThread: () -> Unit,
+    private val checkCancelled: () -> Unit,
+) : Disposable {
+    constructor() : this(
+        { ClaudeCommitSettings.getInstance().state.terminalIconApiEnabled },
+        { ClaudeCommitSettings.getInstance().state.terminalIconApiEnabled = it },
+        TerminalIconServerReadiness(start = {
+            val manager = BuiltInServerManager.getInstance().waitForStart()
+            check(manager.serverDisposable != null) { "Built-in server is unavailable" }
+            manager.port
+        }),
+        { TerminalIconBackend.find() != null },
+        { TerminalIconBackend.find()?.reset(); Unit },
+        { check(!ApplicationManager.getApplication().isDispatchThread) { "Connection preparation must run off EDT" } },
+        { com.intellij.openapi.progress.ProgressManager.checkCanceled() },
+    )
+    internal class Connection(val instance: String, val token: String, val generation: Long) {
         val path: String get() = "/api/claude-commit/v1/$instance/terminal-icon"
     }
     @Volatile private var connection: Connection? = null
@@ -31,23 +52,44 @@ internal class TerminalIconApi : Disposable {
         { task -> Thread(task, "CC Kit terminal icon").apply { isDaemon = true } }, ThreadPoolExecutor.AbortPolicy())
 
     @Synchronized fun current(): Connection? {
-        if (disposed || !ClaudeCommitSettings.getInstance().state.terminalIconApiEnabled) return null
+        if (disposed || !readEnabled()) return null
         return connection ?: Connection(UUID.randomUUID().toString(), randomToken(), ++generation).also { connection = it }
     }
 
     fun authorize(c: Connection, supplied: String?): Boolean = supplied != null && MessageDigest.isEqual(
         ("Bearer " + c.token).toByteArray(Charsets.UTF_8), supplied.toByteArray(Charsets.UTF_8))
 
-    fun isActive(c: Connection): Boolean = !disposed && connection === c && ClaudeCommitSettings.getInstance().state.terminalIconApiEnabled
+    fun isActive(c: Connection): Boolean = !disposed && connection === c && readEnabled()
 
-    /** Called only off EDT; no persisted endpoint/token or implicit shell injection. */
-    fun connectionEnvironment(): String {
+    /** Credentials are prepared off EDT, but published under the same lock as enable/reset. */
+    private fun prepareEnvironment(): Pair<Connection, Map<String, String>> {
+        checkPreparationThread()
         val c = current() ?: throw TerminalIconException("disabled", "API is disabled")
-        if (TerminalIconBackend.find() == null) throw TerminalIconException("unsupported_terminal", "Terminal plugin is unavailable")
-        val port = BuiltInServerManager.getInstance().waitForStart().port
-        if (!isActive(c)) throw TerminalIconException("disabled", "Connection was reset")
-        return "export CC_KIT_TERMINAL_ICON_URL='http://127.0.0.1:$port${c.path}'\n" +
-            "export CC_KIT_TERMINAL_ICON_TOKEN='${c.token}'"
+        if (!backendAvailable()) throw TerminalIconException("unsupported_terminal", "Terminal plugin is unavailable")
+        val port = serverReadiness.awaitPort(checkCancelled = {
+            checkCancelled()
+            if (!isActive(c)) throw TerminalIconException("disabled", "Connection was reset")
+        })
+        return c to mapOf(
+            TerminalIconEnvironment.URL to "http://127.0.0.1:$port${c.path}",
+            TerminalIconEnvironment.TOKEN to c.token,
+        )
+    }
+
+    fun injectConnectionEnvironment(env: MutableMap<String, String>) {
+        val (c, values) = prepareEnvironment()
+        synchronized(this) {
+            if (!isActive(c)) throw TerminalIconException("disabled", "Connection was reset")
+            env.putAll(values)
+        }
+    }
+
+    fun connectionEnvironment(): String {
+        val (c, values) = prepareEnvironment()
+        return synchronized(this) {
+            if (!isActive(c)) throw TerminalIconException("disabled", "Connection was reset")
+            TerminalIconEnvironment.exports(values)
+        }
     }
 
     /** Returns cancellation. Each accepted request receives exactly one completion, including reset/unload. */
@@ -93,20 +135,39 @@ internal class TerminalIconApi : Disposable {
         return cancel
     }
 
+    fun setEnabled(enabled: Boolean) {
+        synchronized(this) {
+            if (readEnabled() == enabled) return
+            writeEnabled(enabled)
+            connection = null
+            generation++
+        }
+        clearPendingAndIcons()
+    }
+
     fun reset() {
         synchronized(this) { connection = null; generation++ }
+        clearPendingAndIcons()
+    }
+
+    private fun clearPendingAndIcons() {
         pending.toList().forEach { it() }
-        TerminalIconBackend.find()?.reset()
+        clearIcons()
     }
 
     override fun dispose() {
         disposed = true
         synchronized(this) { connection = null; generation++ }
         pending.toList().forEach { it() }
+        serverReadiness.close()
         executor.shutdownNow()
     }
 
     companion object {
+        internal fun forTests(
+            readEnabled: () -> Boolean, writeEnabled: (Boolean) -> Unit, readiness: TerminalIconServerReadiness,
+        ): TerminalIconApi = TerminalIconApi(readEnabled, writeEnabled, readiness, { true }, {}, {}, {})
+
         fun getInstance(): TerminalIconApi = ApplicationManager.getApplication().getService(TerminalIconApi::class.java)
         fun error(id: JsonElement = JsonNull.INSTANCE, code: String, message: String): String = JsonObject().apply {
             add("id", id)

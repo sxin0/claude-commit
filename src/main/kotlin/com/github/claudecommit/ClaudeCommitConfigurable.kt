@@ -100,10 +100,7 @@ class ClaudeCommitConfigurable : BoundConfigurable("Claude Code [Kit]") {
             row {
                 checkBox(ClaudeCommitBundle.message("settings.terminalIcon.enabled"))
                     .bindSelected({ state.terminalIconApiEnabled }, { enabled ->
-                        if (state.terminalIconApiEnabled != enabled) {
-                            state.terminalIconApiEnabled = enabled
-                            TerminalIconApi.getInstance().reset()
-                        }
+                        TerminalIconApi.getInstance().setEnabled(enabled)
                     })
                     .comment(ClaudeCommitBundle.message("settings.terminalIcon.comment"))
             }
