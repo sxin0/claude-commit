@@ -22,7 +22,7 @@ IDE_HOME ?= $(shell for d in "$$HOME/Applications"/*.app/Contents /Applications/
 
 KOTLINC := $(IDE_HOME)/plugins/Kotlin/kotlinc/bin/kotlinc
 
-.PHONY: all build jar clean check
+.PHONY: all build jar clean check test
 
 all: jar
 
@@ -50,9 +50,20 @@ build: check
 jar: build
 	@cp -r src/main/resources/META-INF src/main/resources/icons src/main/resources/messages $(OUT)/
 	@JH="$${JAVA_HOME:-$(IDE_HOME)/jbr/Contents/Home}"; \
+	 if [ ! -x "$$JH/bin/jar" ]; then JH=$$(/usr/libexec/java_home 2>/dev/null); fi; \
+	 [ -x "$$JH/bin/jar" ] || { echo "ERROR: set JAVA_HOME to a JDK containing jar"; exit 1; }; \
 	 cd $(OUT) && "$$JH/bin/jar" cf ../$(PLUGIN_JAR) META-INF/ icons/ messages/ com/
 	@rm -rf $(OUT)
 	@echo "Built $(PLUGIN_JAR)"
+
+# Tests compile into a separate directory; production packaging never includes them.
+test: check
+	@mkdir -p out-test
+	@trap 'rm -rf out-test' EXIT; \
+	 CP=$$(find "$(IDE_HOME)/lib" "$(IDE_HOME)/lib/modules" "$(IDE_HOME)/plugins/terminal/lib" "$(IDE_HOME)/plugins/terminal/lib/modules" -maxdepth 1 -name '*.jar' 2>/dev/null | tr '\n' ':'); \
+	 JH="$${JAVA_HOME:-$(IDE_HOME)/jbr/Contents/Home}"; \
+	 JAVA_HOME="$$JH" "$(KOTLINC)" $(SRC) src/test/kotlin/com/github/claudecommit/*.kt -classpath "$$CP" -d out-test -jvm-target $(JVM_TARGET) && \
+	 "$(IDE_HOME)/jbr/Contents/Home/bin/java" -Djava.awt.headless=true -cp "out-test:$$CP:$(IDE_HOME)/plugins/Kotlin/kotlinc/lib/kotlin-stdlib.jar" com.github.claudecommit.TerminalIconTestsKt
 
 clean:
 	@rm -rf $(OUT) $(PLUGIN_JAR)

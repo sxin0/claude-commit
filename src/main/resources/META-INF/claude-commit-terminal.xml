@@ -17,6 +17,9 @@
               topic="com.intellij.openapi.project.ProjectCloseListener"/>
   </applicationListeners>
   <extensions defaultExtensionNs="com.intellij">
+    <applicationService serviceInterface="com.github.claudecommit.TerminalIconBackend"
+                        serviceImplementation="com.github.claudecommit.TerminalTabIconService"/>
+    <httpRequestHandler implementation="com.github.claudecommit.TerminalIconHttpHandler"/>
     <!-- Cmd/Alt+N is also the IDE's "Activate <X> Tool Window" shortcut. Both actions
          end up enabled for the same keystroke, and a promoter is the platform's way
          of deciding the winner — see SwitchTerminalTabActionPromoter. -->

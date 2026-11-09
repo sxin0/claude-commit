@@ -77,6 +77,14 @@ make clean      # 清理
 make IDE_HOME="$HOME/Applications/IntelliJ IDEA.app/Contents"
 ```
 
+## 终端 Tab 图标接口
+
+可选的本地认证接口，可按 `$TERM_SESSION_ID` 更新指定终端标签页标题左侧的真实图标，支持自定义 SVG、单帧图标和多帧动画，不修改标题或抢焦点。
+
+在设置中启用“终端标签页图标接口”并应用，再点击“复制连接环境命令”，在本机终端执行。接口默认关闭，不安装 hooks、不改 shell 配置。支持 lease/revision 防旧请求覆盖、TTL 及清除恢复；丢失租约或排障后可从设置重置连接并清除图标。
+
+详见 [接口契约、安全边界与 curl 示例](docs/terminal-icon-api.md)。首版本限本机 Terminal 工具窗口，远程／编辑器终端不支持；253 最低 SDK 的图标能力尚未实测，不将主插件能加载等同于新接口可用。
+
 ## 已知限制
 
 - 新增但尚未 `git add` 的文件(Unversioned Files)即使勾选也不会计入(git 没有它们的 diff;IDE 将文件加入 VCS 后即可)

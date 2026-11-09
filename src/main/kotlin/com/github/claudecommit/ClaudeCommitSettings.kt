@@ -82,6 +82,9 @@ class ClaudeCommitSettings : PersistentStateComponent<ClaudeCommitSettings.State
          * See [SwitchProjectWindowAction].
          */
         var switchProjectWindowWithNumberKeys: Boolean = true
+
+        /** Opt-in, authenticated loopback API. Credentials are never persisted here. */
+        var terminalIconApiEnabled: Boolean = false
     }
 
     private var state = State()

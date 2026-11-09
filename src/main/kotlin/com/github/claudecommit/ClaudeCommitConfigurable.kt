@@ -96,6 +96,23 @@ class ClaudeCommitConfigurable : BoundConfigurable("Claude Code [Kit]") {
             }
         }
 
+        group(ClaudeCommitBundle.message("settings.terminalIcon.group")) {
+            row {
+                checkBox(ClaudeCommitBundle.message("settings.terminalIcon.enabled"))
+                    .bindSelected({ state.terminalIconApiEnabled }, { enabled ->
+                        if (state.terminalIconApiEnabled != enabled) {
+                            state.terminalIconApiEnabled = enabled
+                            TerminalIconApi.getInstance().reset()
+                        }
+                    })
+                    .comment(ClaudeCommitBundle.message("settings.terminalIcon.comment"))
+            }
+            row {
+                button(ClaudeCommitBundle.message("settings.terminalIcon.copy")) { copyTerminalIconConnection() }
+                button(ClaudeCommitBundle.message("settings.terminalIcon.reset")) { TerminalIconApi.getInstance().reset() }
+            }
+        }
+
         // Switching project windows is not a terminal feature (it works from the
         // editor too), so it gets its own group rather than joining the one above.
         group(ClaudeCommitBundle.message("settings.window.group")) {
@@ -103,6 +120,25 @@ class ClaudeCommitConfigurable : BoundConfigurable("Claude Code [Kit]") {
                 checkBox(ClaudeCommitBundle.message("settings.switchProjectWindow.label"))
                     .bindSelected(state::switchProjectWindowWithNumberKeys)
                     .comment(ClaudeCommitBundle.message("settings.switchProjectWindow.comment"))
+            }
+        }
+    }
+
+    private fun copyTerminalIconConnection() {
+        val app = com.intellij.openapi.application.ApplicationManager.getApplication()
+        app.executeOnPooledThread {
+            val snippet = try { TerminalIconApi.getInstance().connectionEnvironment() }
+            catch (_: Exception) { null }
+            app.invokeLater {
+                if (snippet != null) {
+                    com.intellij.openapi.ide.CopyPasteManager.getInstance()
+                        .setContents(java.awt.datatransfer.StringSelection(snippet))
+                } else {
+                    com.intellij.openapi.ui.Messages.showWarningDialog(
+                        ClaudeCommitBundle.message("settings.terminalIcon.unavailable"),
+                        ClaudeCommitBundle.message("settings.terminalIcon.group"),
+                    )
+                }
             }
         }
     }
